@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, type JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
-  const [formData, setFormData] = useState({
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+const Login = (): JSX.Element => {
+  const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
   });
@@ -125,11 +129,9 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl
-                       hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-200
-                       disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200
-                       shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
-            >
+              className="w-full px-5 py-2.5 text-sm font-semibold text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-all duration-200
+                     shadow-md hover:shadow-lg transform cursor-pointer "
+            > 
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -145,7 +147,7 @@ const Login = () => {
           </form>
 
           {/* Divider */}
-          <div className="relative my-8">
+          {/* <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
@@ -156,7 +158,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Social Login */}
+           Social Login 
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
@@ -183,7 +185,7 @@ const Login = () => {
               </svg>
               GitHub
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Sign Up Link */}

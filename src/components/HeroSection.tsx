@@ -6,7 +6,7 @@ interface Model {
   id: string;
   name: string;
   provider: string;
-  icon: string;
+  
 }
 
 const HeroSection = () => {
@@ -42,7 +42,7 @@ const HeroSection = () => {
           </div>
           
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-blue-500 bg-clip-text text-transparent">
               LLMHUB
             </span>
           </h1>
@@ -60,7 +60,7 @@ const HeroSection = () => {
           {/* Model Selector */}
           <div className="flex items-center mb-4 px-2">
             <ModelSelector 
-              multiSelect={false}
+              multiSelect={true}
               onSelectionChange={handleModelSelectionChange}
             />
           </div>
@@ -107,10 +107,10 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               {[
-                { text: 'Explain quantum computing', icon: '🔬' },
-                { text: 'Write Python code', icon: '💻' },
-                { text: 'Creative writing tips', icon: '✍️' },
-                { text: 'Latest tech trends', icon: '🚀' }
+                { text: 'Explain quantum computing',  },
+                { text: 'Write Python code',  },
+                { text: 'Creative writing tips',  },
+                { text: 'Latest tech trends',  }
               ].map((suggestion) => (
                 <button
                   key={suggestion.text}
@@ -121,9 +121,9 @@ const HeroSection = () => {
                            hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md
                            flex items-center gap-2 backdrop-blur-sm"
                 >
-                  <span className="text-base group-hover:scale-110 transition-transform duration-200">
+                  {/* <span className="text-base group-hover:scale-110 transition-transform duration-200">
                     {suggestion.icon}
-                  </span>
+                  </span> */}
                   <span>{suggestion.text}</span>
                 </button>
               ))}

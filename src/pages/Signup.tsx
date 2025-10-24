@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useState , type JSX} from 'react';
 import { Link } from 'react-router-dom';
-
-const Signup = () => {
-  const [formData, setFormData] = useState({
+type SignupFormData = {
+    fullName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
+const Signup = ():JSX.Element => {
+  const [formData, setFormData] = useState<SignupFormData>({
     fullName: '',
     email: '',
     password: '',
@@ -67,7 +72,7 @@ const Signup = () => {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-extrabold bg-blue-400 bg-clip-text text-transparent mb-2">
             Create Account
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
@@ -246,10 +251,8 @@ const Signup = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl
-                       hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-purple-200
-                       disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200
-                       shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full px-5 py-2.5 text-sm font-semibold text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-all duration-200
+                     shadow-md hover:shadow-lg transform cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -266,7 +269,7 @@ const Signup = () => {
           </form>
 
           {/* Divider */}
-          <div className="relative my-6">
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
@@ -277,7 +280,7 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* Social Signup */}
+          Social Signup
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
@@ -304,7 +307,7 @@ const Signup = () => {
               </svg>
               GitHub
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Login Link */}

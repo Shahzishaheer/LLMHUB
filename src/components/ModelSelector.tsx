@@ -4,7 +4,7 @@ interface Model {
   id: string;
   name: string;
   provider: string;
-  icon: string;
+  
 }
 
 interface ModelSelectorProps {
@@ -13,16 +13,16 @@ interface ModelSelectorProps {
 }
 
 const AVAILABLE_MODELS: Model[] = [
-  { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI', icon: '🤖' },
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI', icon: '⚡' },
-  { id: 'claude-3', name: 'Claude 3', provider: 'Anthropic', icon: '🧠' },
-  { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', icon: '✨' },
-  { id: 'llama-2', name: 'Llama 2', provider: 'Meta', icon: '🦙' },
-  { id: 'mistral', name: 'Mistral', provider: 'Mistral AI', icon: '🌪️' },
+  { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI'},
+  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI'},
+  { id: 'claude-3', name: 'Claude 3', provider: 'Anthropic' },
+  { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', },
+  { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
+  { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
 ];
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({ 
-  multiSelect = false, 
+  multiSelect = true, 
   onSelectionChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +79,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
                  transition-all duration-200 shadow-md hover:shadow-lg
                  text-sm font-medium text-gray-700 dark:text-gray-300"
       >
-        <span className="text-base">{selectedModels[0].icon}</span>
+        {/* <span className="text-base">{selectedModels[0].icon}</span> */}
         <span className="hidden sm:inline">
           {selectedModels.length === 1 
             ? selectedModels[0].name 
@@ -121,27 +121,25 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
                            transition-all duration-150 border-b border-gray-100 dark:border-gray-700/50
                            ${isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                 >
+                  {/* Radio Button */}
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
+                                ${isSelected 
+                                  ? 'border-blue-600' 
+                                  : 'border-gray-300 dark:border-gray-600'}`}
+                  >
+                    {isSelected && (
+                      <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                    )}
+                  </div>
+
                   {/* Icon */}
-                  <span className="text-2xl">{model.icon}</span>
+                  {/* <span className="text-2xl">{model.icon}</span> */}
                   
                   {/* Model Name Only */}
                   <div className="flex-1 text-left">
                     <p className="font-semibold text-gray-900 dark:text-white text-sm">
                       {model.name}
                     </p>
-                  </div>
-
-                  {/* Checkbox/Radio indicator */}
-                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center
-                                ${isSelected 
-                                  ? 'bg-blue-600 border-blue-600' 
-                                  : 'border-gray-300 dark:border-gray-600'}`}
-                  >
-                    {isSelected && (
-                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    )}
                   </div>
                 </button>
               );
