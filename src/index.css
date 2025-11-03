@@ -209,13 +209,14 @@ html {
 
   .navbar-mobile-menu {
     display: block;
-    background-color: white;
+    background-color: #101828;
     border-top: 1px solid #e5e7eb;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     padding: 1rem;
   }
 
   .navbar-mobile-menu a {
+    color: white;
     display: block;
     padding: 0.75rem 1rem;
 
@@ -225,9 +226,11 @@ html {
     transition: all 0.2s ease;
   }
 
-  .navbar-mobile-menu a:hover {
-    background-color: #f3f4f6;
-    color: #2563eb;
+  .navbar-mobile-menu a:focus {
+    
+      color: skyblue;
+      font-weight: 600;
+    
   }
 
   .navbar-mobile-actions {

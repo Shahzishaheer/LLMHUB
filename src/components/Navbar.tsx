@@ -5,6 +5,8 @@ import Accountsetting from './Accountsetting';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const user = useUser();
+  
 
   return (
     <nav className="navbar">
@@ -68,11 +70,12 @@ function Navbar() {
 
           <div className="navbar-mobile-actions">
             <SignedOut> 
-              <Link to="/login" className="navbar-btn navbar-btn-secondary">Login</Link>
+              {}
+              <Link to="/login" className="navbar-btn navbar-btn-primary">Login</Link>
               <Link to="/signup" className="navbar-btn navbar-btn-primary">Sign Up</Link>
             </SignedOut>
             <SignedIn>
-              <UserButton />
+             <Accountsetting />
             </SignedIn>
           </div>
         </div>

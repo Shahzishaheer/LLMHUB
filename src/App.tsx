@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import About from './pages/About';
+import UserProfile from './components/UserProfile';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<UserProfile />} />
 
       </Routes>
     </Mainlayout>
