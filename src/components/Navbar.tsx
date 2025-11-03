@@ -1,64 +1,84 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
- import { useUser } from '@clerk/clerk-react';
+import { useState } from 'react'
+import { SignedOut, SignedIn, UserButton, useUser } from '@clerk/clerk-react';
+import { Link } from 'react-router';
+import Accountsetting from './Accountsetting';
 
-const Navbar = () => {
-  const data =useUser();
-  console.log("userdata",data);
+function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Left Side: Logo and Navigation Links */}
-          <div className="flex items-center gap-4 sm:gap-8">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold bg-blue-300 bg-clip-text text-transparent my-2">
-                LLMHUB
-              </h1>
-            </Link>
-
-            {/* Desktop Navigation Links - Hidden on Mobile */}
-            <div className="flex gap-8 lg:gap-10">
-              <Link 
-                to="/" 
-                className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/about" 
-                className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-              >
-                About
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Side: Desktop Auth Buttons - Hidden on Mobile */}
-        <div className="items-end gap-3 lg:gap-4">
-            <Link 
-              to="/login"
-              className="px-4 lg:px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 
-                       hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-            >
-              Login
-            </Link>
-            <Link 
-              to="/signup"
-              className="px-4 lg:px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 
-                       rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200
-                       shadow-sm hover:shadow-md"
-            >
-              Sign Up
-            </Link>
-          </div>
-
+    <nav className="navbar">
+      <div className="navbar-container">
+        {/* Logo/Brand */}
+        <div>
+          <a href="#" className="navbar-brand">
+            LLM-HUB
+          </a>
         </div>
-     </div>
-    </nav>
-  );
-};
 
-export default Navbar;
+        {/* Desktop Navigation Links */}
+        <div className="navbar-nav">
+         <Link to="/">Home</Link>
+          <Link to="#services">Services</Link>
+          <Link to="#about">About</Link>
+          <Link to="#contact">Contact</Link>
+        </div>
+
+        {/* Desktop Login/Signup Buttons */}
+        <div className="navbar-actions">
+          <SignedOut>
+              <Link to="/login" className="navbar-btn navbar-btn-primary">Login</Link>
+              <Link to="/signup" className="navbar-btn navbar-btn-primary">Sign Up</Link>
+            </SignedOut>
+             <SignedIn>
+              {/* <UserButton /> */}
+              <Accountsetting />
+            </SignedIn>
+        </div>
+
+        {/* Mobile/Tablet Hamburger Button */}
+        <button
+          className="navbar-toggle"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+        >
+          {!isMenuOpen ? (
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          ) : (
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile/Tablet Dropdown Menu */}
+      {isMenuOpen && (
+        <div className="navbar-mobile-menu">
+          {/* Navigation Links */}
+          <Link to="/">Home</Link>
+          <Link to="#services">Services</Link>
+          <Link to="#about">About</Link>
+          <Link to="#contact">Contact</Link>
+
+          {/* Auth Buttons */}
+
+          <div className="navbar-mobile-actions">
+            <SignedOut> 
+              <Link to="/login" className="navbar-btn navbar-btn-secondary">Login</Link>
+              <Link to="/signup" className="navbar-btn navbar-btn-primary">Sign Up</Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
+        </div>
+      )}
+    </nav>
+  )
+}
+
+export default Navbar

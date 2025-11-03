@@ -72,3 +72,237 @@ html {
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
+
+/* @media screen {
+  @container min-width(--breakpoint-tablet) {
+    .tablet\:text-center {
+      text-align: center;
+    }
+  }
+
+  @container min-width(--breakpoint-laptop) {
+    .laptop\:text-left {
+      text-align: left;
+    }
+  }
+
+  @container min-width(--breakpoint-desktop) {
+    .desktop\:text-right {
+      text-align: right;
+    }
+  }
+
+} */
+
+@media screen {
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: #101828;
+    box-shadow: 0 4px 6px 1px rgba(5, 179, 237, );
+    transition: all 0.3s ease-in-out;
+  }
+
+  .navbar-container {
+    /* max-width: 1900px; */
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2563eb;
+    text-decoration: none;
+  }
+
+   .navbar-nav {
+    display: none;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 4rem;
+  }
+
+  .navbar-nav a {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .navbar-nav a:hover {
+    color: skyblue;
+    font-weight: 600;
+  }
+  .navbar-nav a:focus {
+    color: #06b7ec;
+    font-weight: 700;
+  }
+  
+
+  .navbar-actions {
+    display: none;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .navbar-btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    
+  }
+    .navbar-actions .navbar-btn:hover {
+      background-color: #f3f4f6;
+        color: #2563eb;
+    }
+
+  .navbar-btn-primary {
+    background-color: #2563eb;
+    color: white;
+  }
+
+  .navbar-btn-primary:hover {
+    background-color: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  .navbar-btn-secondary {
+    background-color: transparent;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+  }
+
+  .navbar-btn-secondary:hover {
+    background-color: #eff6ff;
+  }
+
+  .navbar-toggle {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .navbar-toggle:hover {
+    background-color: #f3f4f6;
+  }
+
+  .navbar-toggle svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #374151;
+  }
+
+  .navbar-mobile-menu {
+    display: block;
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+
+  .navbar-mobile-menu a {
+    display: block;
+    padding: 0.75rem 1rem;
+
+    text-decoration: none;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .navbar-mobile-menu a:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+  }
+
+  .navbar-mobile-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .navbar-mobile-actions .navbar-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem;
+    color: #f3f4f6;
+      background-color: #2563eb;
+  }
+}
+
+/* Tablet breakpoint - 40rem (640px) */
+@media (min-width: 40rem) {
+  .navbar-container {
+    padding: 0 1.5rem;
+    height: 4.5rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.75rem;
+  }
+}
+
+/* Laptop breakpoint - 64rem (1024px) */
+@media (min-width: 64rem) {
+  .navbar-nav {
+    display: flex;
+  }
+
+  .navbar-actions {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: none !important;
+  }
+
+  .navbar-mobile-menu {
+    display: none !important;
+  }
+
+  .navbar-container {
+    padding: 0 2rem;
+    height: 5rem;
+  }
+
+  .navbar-brand {
+    font-size: 2rem;
+  }
+}
+
+/* Desktop breakpoint - 80rem (1280px) */
+@media (min-width: 80rem) {
+  .navbar-container {
+    padding: 0 2.5rem;
+  }
+
+  .navbar-nav {
+    gap: 2.5rem;
+  }
+
+  .navbar-actions {
+    gap: 1.25rem;
+  }
+
+  .navbar-btn {
+    padding: 0.625rem 1.75rem;
+  }
+}
