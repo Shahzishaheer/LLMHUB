@@ -14,6 +14,7 @@ interface ApiKey {
 
 const UserProfile = (): JSX.Element => {
   const { user } = useUser();
+  console.log(user);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([
     {
       id: 'openai',
@@ -82,7 +83,7 @@ const UserProfile = (): JSX.Element => {
       )
 
     );
-    Cookies.set(`${apiKeys.find(key => key.id === id)?.name}-api-key`, JSON.stringify(apiKeys.map(key => key.value)));
+    // Cookies.set(`${apiKeys.find(key => key.id === id)?.name}-api-key`, (apiKeys.map(key => key.value).toLocaleString()));  // Store each API key in its own cookie
   };
 
   const toggleShowValue = (id: string) => {
@@ -116,8 +117,8 @@ const UserProfile = (): JSX.Element => {
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl">
-              {user?.firstName?.charAt(0)?.toUpperCase() || user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() || 'U'}
+            <div className="w-16 h-16 rounded-full bg-blue-400  flex items-center justify-center text-white font-bold text-2xl">
+              {user?.firstName?.charAt(0)?.toUpperCase() || user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() || 'User'}
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
