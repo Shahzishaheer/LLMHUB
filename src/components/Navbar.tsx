@@ -1,15 +1,39 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SignedOut, SignedIn, UserButton, useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router';
 import Accountsetting from './Accountsetting';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const user = useUser();
-  
+  const navbarRef = useRef<HTMLElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navbarRef.current && !navbarRef.current.contains(event.target as Node))
+         {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Only add listener when menu is open
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  // Close menu when clicking on navigation links
+  const handleLinkClick = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" ref={navbarRef}>
       <div className="navbar-container">
         {/* Logo/Brand */}
         <div>
@@ -61,18 +85,16 @@ function Navbar() {
       {isMenuOpen && (
         <div className="navbar-mobile-menu">
           {/* Navigation Links */}
-          <Link to="/">Home</Link>
-          <Link to="#services">Services</Link>
-          <Link to="#about">About</Link>
-          <Link to="#contact">Contact</Link>
+          <Link to="/" onClick={handleLinkClick}>Home</Link>
+          <Link to="#services" onClick={handleLinkClick}>Services</Link>
+          <Link to="#about" onClick={handleLinkClick}>About</Link>
+          <Link to="#contact" onClick={handleLinkClick}>Contact</Link>
 
           {/* Auth Buttons */}
-
           <div className="navbar-mobile-actions">
             <SignedOut> 
-              {}
-              <Link to="/login" className="navbar-btn navbar-btn-primary">Login</Link>
-              <Link to="/signup" className="navbar-btn navbar-btn-primary">Sign Up</Link>
+              <Link to="/login" className="navbar-btn navbar-btn-primary" onClick={handleLinkClick}>Login</Link>
+              <Link to="/signup" className="navbar-btn navbar-btn-primary" onClick={handleLinkClick}>Sign Up</Link>
             </SignedOut>
             <SignedIn>
              <Accountsetting />

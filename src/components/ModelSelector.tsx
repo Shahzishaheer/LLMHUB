@@ -27,6 +27,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Model[]>([AVAILABLE_MODELS[0]]);
+ 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

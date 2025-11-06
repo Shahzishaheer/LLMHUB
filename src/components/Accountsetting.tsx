@@ -27,6 +27,7 @@ const Accountsetting = (): JSX.Element => {
   const handleSignOut = async () => {
     try {
       await signOut();
+      localStorage.clear();
       setIsDropdownOpen(false);
     } catch (error) {
       console.error('Error signing out:', error);

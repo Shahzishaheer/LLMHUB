@@ -9,10 +9,13 @@ interface Model {
   
 }
 
+// Default model that matches ModelSelector's initial state
+const DEFAULT_MODEL: Model = { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' };
+
 const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedModels, setSelectedModels] = useState<Model[]>([]);
+  const [selectedModels, setSelectedModels] = useState<Model[]>([DEFAULT_MODEL]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,17 +136,24 @@ const HeroSection = () => {
 
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-          <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-blue-50/80 via-indigo-50/50 to-blue-50/80 
-                        dark:from-gray-800/50 dark:via-gray-800/30 dark:to-gray-900/50 
-                        border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm
-                        hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">⚡</div>
-            <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">Lightning Fast</h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Get instant, real-time responses powered by state-of-the-art AI technology
-            </p>
-          </div>
           
+          {selectedModels.map((model) => (
+            <div
+              key={model.id}
+              className="group text-center p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm"
+            >
+              <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">{model.name}</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{model.provider}</p>
+              <textarea
+                name={`response-${model.id}`}
+                id=""
+                cols={40}
+                rows={6}
+                className="w-full border-2 border-blue-300 rounded-2xl p-2"
+              ></textarea>
+            </div>
+          ))}
+{/*           
           <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50/80 via-pink-50/50 to-purple-50/80 
                         dark:from-gray-800/50 dark:via-gray-800/30 dark:to-gray-900/50
                         border border-purple-100 dark:border-gray-700/50 backdrop-blur-sm
@@ -164,7 +174,7 @@ const HeroSection = () => {
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               Bank-level encryption keeps your data private and protected
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

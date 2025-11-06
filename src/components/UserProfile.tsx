@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from 'react';
+import React, { use, useEffect, useState, type JSX } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import Cookies from 'js-cookie';
 
@@ -14,7 +14,8 @@ interface ApiKey {
 
 const UserProfile = (): JSX.Element => {
   const { user } = useUser();
-  console.log(user);
+
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([
     {
       id: 'openai',
@@ -44,6 +45,15 @@ const UserProfile = (): JSX.Element => {
       icon: '🧠'
     },
     {
+    id: 'perplexity',
+    name: 'Perplexity AI',
+    value: '',
+    placeholder: 'pplx-...',
+    description: 'Perplexity models including pplx-7b-online, pplx-70b-online',
+    website: 'https://www.perplexity.ai/settings/api',
+    icon: '🔮'
+  },
+    {
       id: 'huggingface',
       name: 'Hugging Face',
       value: '',
@@ -71,10 +81,29 @@ const UserProfile = (): JSX.Element => {
       icon: '🌪️'
     }
   ]);
-  console.log(apiKeys[1].id, apiKeys[1].value);
+  
 
   const [showValues, setShowValues] = useState<{ [key: string]: boolean }>({});
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+ //api keys persistence with localStorage and remove form when input free
+  useEffect(() => {
+  setApiKeys(prev =>
+    prev.map(key => {
+      const storedValue = localStorage.getItem(`${key.name}-api-key`);
+      return storedValue ? { ...key, value: storedValue } : key;
+    })
+  );
+  setLoaded(true);
+}, []);
+
+useEffect(() => {
+  if (!loaded) return; // Avoid running on initial load
+  apiKeys.forEach(key =>
+    key.value && key.value.trim()
+      ? localStorage.setItem(`${key.name}-api-key`, key.value)
+      : localStorage.removeItem(`${key.name}-api-key`)
+  );
+}, [apiKeys, loaded]);
 
   const handleApiKeyChange = (id: string, value: string) => {
     setApiKeys(prev => 
@@ -83,7 +112,10 @@ const UserProfile = (): JSX.Element => {
       )
 
     );
-    // Cookies.set(`${apiKeys.find(key => key.id === id)?.name}-api-key`, (apiKeys.map(key => key.value).toLocaleString()));  // Store each API key in its own cookie
+
+    
+    
+    
   };
 
   const toggleShowValue = (id: string) => {
@@ -93,18 +125,7 @@ const UserProfile = (): JSX.Element => {
     }));
   };
 
-  const handleSave = async () => {
-    setSaveStatus('saving');
-    try {
-      // Simulate API call to save keys
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
-    } catch (error) {
-      setSaveStatus('error');
-      setTimeout(() => setSaveStatus('idle'), 2000);
-    }
-  };
+
 
   const clearApiKey = (id: string) => {
     setApiKeys(prev => prev.map(key => key.id === id ? { ...key, value: '' } : key));
@@ -117,9 +138,9 @@ const UserProfile = (): JSX.Element => {
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-full bg-blue-400  flex items-center justify-center text-white font-bold text-2xl">
-              {user?.firstName?.charAt(0)?.toUpperCase() || user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() || 'User'}
-            </div>
+            <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-base md:text-xl lg:text-2xl">
+  {user?.firstName?.charAt(0)?.toUpperCase() || user?.emailAddresses[0]?.emailAddress?.charAt(0)?.toUpperCase() || 'User'}
+</div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {user?.firstName && user?.lastName 
@@ -143,22 +164,6 @@ const UserProfile = (): JSX.Element => {
                 Configure your AI model API keys to access different language models
               </p>
             </div>
-            <button
-              onClick={handleSave}
-              disabled={saveStatus === 'saving'}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                saveStatus === 'saved'
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-                  : saveStatus === 'error'
-                  ? 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400'
-                  : 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600'
-              }`}
-            >
-              {saveStatus === 'saving' && '⏳ Saving...'}
-              {saveStatus === 'saved' && '✅ Saved'}
-              {saveStatus === 'error' && '❌ Error'}
-              {saveStatus === 'idle' && '💾 Save Keys'}
-            </button>
           </div>
 
           {/* API Keys Grid */}
