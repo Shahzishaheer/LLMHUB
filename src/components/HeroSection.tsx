@@ -10,12 +10,12 @@ interface Model {
 }
 
 // Default model that matches ModelSelector's initial state
-const DEFAULT_MODEL: Model = { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' };
+// const DEFAULT_MODEL: Model = { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' };
 
 const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedModels, setSelectedModels] = useState<Model[]>([DEFAULT_MODEL]);
+  const [selectedModels, setSelectedModels] = useState<Model[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +140,7 @@ const HeroSection = () => {
           {selectedModels.map((model) => (
             <div
               key={model.id}
-              className="group text-center p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm"
+              className=" text-white group text-center p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm"
             >
               <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">{model.name}</h4>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{model.provider}</p>

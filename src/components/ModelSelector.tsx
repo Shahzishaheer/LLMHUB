@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
+import Cookies from 'js-cookie';
 interface Model {
   id: string;
   name: string;
@@ -13,21 +13,24 @@ interface ModelSelectorProps {
 }
 
 const AVAILABLE_MODELS: Model[] = [
-  { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI'},
-  { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', provider: 'OpenAI'},
-  { id: 'claude-3', name: 'Claude 3', provider: 'Anthropic' },
-  { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', },
-  { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
-  { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
+  { id: 'gemini', name: 'Gemini', provider: 'Google' },
+  { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
+  { id: 'huggingface', name: 'Hugging Face', provider: 'Hugging Face' },
+  // { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', },
+  // { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
+  // { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
 ];
+
+
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({ 
   multiSelect = true, 
   onSelectionChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModels, setSelectedModels] = useState<Model[]>([AVAILABLE_MODELS[0]]);
- 
+  const [selectedModels, setSelectedModels] = useState<Model[]>([]);
+  const keyRef = useRef<string | null>(null); // Replace useState with useRef
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,11 +39,22 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      for (let i = 0; i < AVAILABLE_MODELS.length; i++) {
+        const model = localStorage.getItem(`${AVAILABLE_MODELS[i].id}`);
+        if (!model) continue;
+        keyRef.current = model; // Update the ref value
+        console.log("\nCurrent model key:", keyRef.current); // Log the latest value
+      }
+    }, 10000); // Log every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
   const handleModelToggle = (model: Model) => {
     let newSelection: Model[];
     

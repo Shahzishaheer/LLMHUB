@@ -14,36 +14,39 @@ interface ApiKey {
 
 const UserProfile = (): JSX.Element => {
   const { user } = useUser();
+ 
+  
 
   const [loaded, setLoaded] = useState<boolean>(false);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([
-    {
-      id: 'openai',
-      name: 'OpenAI',
-      value: '',
-      placeholder: 'sk-...',
-      description: 'GPT-4, GPT-3.5-turbo, and other OpenAI models',
-      website: 'https://platform.openai.com/api-keys',
-      icon: '🤖'
-    },
+   
+    // {
+    //   id: 'openai',
+    //   name: 'OpenAI',
+    //   value: '',
+    //   placeholder: 'sk-...',
+    //   description: 'GPT-4, GPT-3.5-turbo, and other OpenAI models',
+    //   website: 'https://platform.openai.com/api-keys',
+    //   icon: '🤖'
+    // },
     {
       id: 'gemini',
-      name: 'Google Gemini',
+      name: ' Gemini',
       value: '',
       placeholder: 'AIzaSy...',
       description: 'Google Gemini Pro and Gemini models',
       website: 'https://makersuite.google.com/app/apikey',
       icon: '💎'
     },
-    {
-      id: 'anthropic',
-      name: 'Anthropic Claude',
-      value: '',
-      placeholder: 'sk-ant-...',
-      description: 'Claude 3 and other Anthropic models',
-      website: 'https://console.anthropic.com/account/keys',
-      icon: '🧠'
-    },
+    // {
+    //   id: 'anthropic',
+    //   name: 'Anthropic Claude',
+    //   value: '',
+    //   placeholder: 'sk-ant-...',
+    //   description: 'Claude 3 and other Anthropic models',
+    //   website: 'https://console.anthropic.com/account/keys',
+    //   icon: '🧠'
+    // },
     {
     id: 'perplexity',
     name: 'Perplexity AI',
@@ -55,31 +58,31 @@ const UserProfile = (): JSX.Element => {
   },
     {
       id: 'huggingface',
-      name: 'Hugging Face',
+      name: 'Hugging face',
       value: '',
       placeholder: 'hf_...',
       description: 'Access to Hugging Face models and datasets',
       website: 'https://huggingface.co/settings/tokens',
       icon: '🤗'
     },
-    {
-      id: 'cohere',
-      name: 'Cohere',
-      value: '',
-      placeholder: 'co-...',
-      description: 'Cohere Command and Embed models',
-      website: 'https://dashboard.cohere.ai/api-keys',
-      icon: '⚡'
-    },
-    {
-      id: 'mistral',
-      name: 'Mistral AI',
-      value: '',
-      placeholder: 'mi-...',
-      description: 'Mistral 7B, Mixtral and other Mistral models',
-      website: 'https://console.mistral.ai/api-keys/',
-      icon: '🌪️'
-    }
+    // {
+    //   id: 'cohere',
+    //   name: 'Cohere',
+    //   value: '',
+    //   placeholder: 'co-...',
+    //   description: 'Cohere Command and Embed models',
+    //   website: 'https://dashboard.cohere.ai/api-keys',
+    //   icon: '⚡'
+    // },
+    // {
+    //   id: 'mistral',
+    //   name: 'Mistral AI',
+    //   value: '',
+    //   placeholder: 'mi-...',
+    //   description: 'Mistral 7B, Mixtral and other Mistral models',
+    //   website: 'https://console.mistral.ai/api-keys/',
+    //   icon: '🌪️'
+    // }
   ]);
   
 
@@ -89,7 +92,7 @@ const UserProfile = (): JSX.Element => {
   useEffect(() => {
   setApiKeys(prev =>
     prev.map(key => {
-      const storedValue = localStorage.getItem(`${key.name}-api-key`);
+      const storedValue = localStorage.getItem(key.id);
       return storedValue ? { ...key, value: storedValue } : key;
     })
   );
@@ -100,8 +103,8 @@ useEffect(() => {
   if (!loaded) return; // Avoid running on initial load
   apiKeys.forEach(key =>
     key.value && key.value.trim()
-      ? localStorage.setItem(`${key.name}-api-key`, key.value)
-      : localStorage.removeItem(`${key.name}-api-key`)
+      ? localStorage.setItem(key.id, key.value)
+      : localStorage.removeItem(key.id)
   );
 }, [apiKeys, loaded]);
 
