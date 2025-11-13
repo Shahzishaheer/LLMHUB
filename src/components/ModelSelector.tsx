@@ -43,18 +43,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      for (let i = 0; i < AVAILABLE_MODELS.length; i++) {
-        const model = localStorage.getItem(`${AVAILABLE_MODELS[i].id}`);
-        if (!model) continue;
-        keyRef.current = model; // Update the ref value
-        console.log("\nCurrent model key:", keyRef.current); // Log the latest value
-      }
-    }, 10000); // Log every 10 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  
   const handleModelToggle = (model: Model) => {
     let newSelection: Model[];
     
@@ -124,41 +113,51 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 
           {/* Model List */}
           <div className="max-h-80 overflow-y-auto">
-            {AVAILABLE_MODELS.map((model) => {
-              const isSelected = isModelSelected(model.id);
-              return (
-                <button
-                  key={model.id}
-                  type="button"
-                  onClick={() => handleModelToggle(model)}
-                  className={`w-full px-4 py-3 flex items-center gap-3 
-                           hover:bg-blue-50 dark:hover:bg-gray-700/50 
-                           transition-all duration-150 border-b border-gray-100 dark:border-gray-700/50
-                           ${isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
-                >
-                  {/* Radio Button */}
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                                ${isSelected 
-                                  ? 'border-blue-600' 
-                                  : 'border-gray-300 dark:border-gray-600'}`}
-                  >
-                    {isSelected && (
-                      <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                    )}
-                  </div>
 
-                  {/* Icon */}
-                  {/* <span className="text-2xl">{model.icon}</span> */}
-                  
-                  {/* Model Name Only */}
-                  <div className="flex-1 text-left">
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm">
-                      {model.name}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+            {AVAILABLE_MODELS.map((model) => {
+  const isSelected = isModelSelected(model.id);
+  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`); // Check if API key exists
+
+  return (
+    <button
+      key={model.id}
+      type="button"
+      onClick={() => isApiKeyAvailable && handleModelToggle(model)} // Only toggle if API key is available
+      className={`w-full px-4 py-3 flex items-center gap-3 
+                   hover:bg-blue-50 dark:hover:bg-gray-700/50 
+                   transition-all duration-150 border-b border-gray-100 dark:border-gray-700/50
+                   ${isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''} 
+                   ${!isApiKeyAvailable ? 'opacity-50 cursor-not-allowed' : ''}`} // Add styles for disabled state
+      disabled={!isApiKeyAvailable} // Disable the button if API key is not available
+      
+    >
+      {/* Radio Button */}
+      <div
+        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
+                    ${
+                      isSelected
+                        ? 'border-blue-600'
+                        : 'border-gray-300 dark:border-gray-600'
+                    }`}
+      >
+        {isSelected && <div className="w-3 h-3 rounded-full bg-blue-600"></div>}
+      </div>
+
+      {/* Model Name */}
+      <div className="flex-1 text-left">
+        <p
+          className={`font-semibold text-sm ${
+            isApiKeyAvailable
+              ? 'text-gray-900 dark:text-white'
+              : 'text-gray-400 dark:text-gray-600'
+          }`} // Change text color if disabled
+        >
+          {model.name}
+        </p>
+      </div>
+    </button>
+  );
+})}
           </div>
         </div>
       )}

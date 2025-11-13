@@ -32,7 +32,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <div className="min-h-[100vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <div className="max-w-5xl w-full space-y-12">
         {/* Hero Title */}
         <div className="text-center space-y-6 animate-fade-in">
@@ -153,28 +153,7 @@ const HeroSection = () => {
               ></textarea>
             </div>
           ))}
-{/*           
-          <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50/80 via-pink-50/50 to-purple-50/80 
-                        dark:from-gray-800/50 dark:via-gray-800/30 dark:to-gray-900/50
-                        border border-purple-100 dark:border-gray-700/50 backdrop-blur-sm
-                        hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🎯</div>
-            <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">Highly Accurate</h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Precision-tuned responses tailored specifically to your questions
-            </p>
-          </div>
-          
-          <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-green-50/80 via-emerald-50/50 to-green-50/80 
-                        dark:from-gray-800/50 dark:via-gray-800/30 dark:to-gray-900/50
-                        border border-green-100 dark:border-gray-700/50 backdrop-blur-sm
-                        hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🔒</div>
-            <h3 className="font-bold text-xl mb-3 text-gray-900 dark:text-white">Enterprise Security</h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Bank-level encryption keeps your data private and protected
-            </p>
-          </div> */}
+
         </div>
       </div>
     </div>
