@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import Cookies from 'js-cookie';
+
 interface Model {
   id: string;
   name: string;
@@ -15,7 +15,7 @@ interface ModelSelectorProps {
 const AVAILABLE_MODELS: Model[] = [
   { id: 'gemini', name: 'Gemini', provider: 'Google' },
   { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
-  { id: 'huggingface', name: 'Hugging Face', provider: 'Hugging Face' },
+  { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },
   // { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', },
   // { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
   // { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },

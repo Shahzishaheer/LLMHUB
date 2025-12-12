@@ -57,12 +57,12 @@ const UserProfile = (): JSX.Element => {
     icon: '🔮'
   },
     {
-      id: 'huggingface',
-      name: 'Hugging face',
+      id: 'Nvidia',
+      name: 'Nvidia',
       value: '',
       placeholder: 'hf_...',
-      description: 'Access to Hugging Face models and datasets',
-      website: 'https://huggingface.co/settings/tokens',
+      description: 'Access to Nvida models and datasets',
+      website: ' openrouter.ai',
       icon: '🤗'
     },
     // {

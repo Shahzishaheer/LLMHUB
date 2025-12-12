@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import ModelSelector from './ModelSelector';
+import Llmresponse from './Llmresponse';
+import { marked } from "marked";
 // import { Send, Sparkles, Zap } from 'lucide-react';
 
 interface Model {
@@ -9,13 +11,12 @@ interface Model {
   
 }
 
-// Default model that matches ModelSelector's initial state
-// const DEFAULT_MODEL: Model = { id: 'gpt-4', name: 'GPT-4', provider: 'OpenAI' };
-
+ 
 const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Model[]>([]);
+  const [llmResponses, setLlmResponses] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +28,36 @@ const HeroSection = () => {
     }
   };
 
+  const handlellmrequest = async (prompt: string): Promise<void> => {
+    setLlmResponses([]); // Clear previous responses
+  try {
+    const response = await fetch('http://localhost:8000/api/v1/llm/openrouter', {    
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    
+    setLlmResponses((prevResponses) => [...prevResponses, data.answer]);
+     
+       
+  } catch (error) {
+    console.error('Error making LLM request:', error);
+  }
+
+};
+  
   const handleModelSelectionChange = (models: Model[]) => {
     setSelectedModels(models);
   };
 
+  
   return (
     <div className="min-h-[100vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <div className="max-w-5xl w-full space-y-12">
@@ -44,8 +71,8 @@ const HeroSection = () => {
             <span className="text-sm font-medium text-blue-700 dark:text-blue-300">AI-Powered Intelligence</span>
           </div>
           
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight">
-            <span className="bg-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight  mt-2">
+            <span className="bg-blue-500 bg-clip-text text-transparent ">
               LLMHUB
             </span>
           </h1>
@@ -88,6 +115,7 @@ const HeroSection = () => {
               />
               <button
                 type="submit"
+                 onClick={() => handlellmrequest(message)}
                 disabled={!message.trim()}
                 className="absolute right-3 p-3.5 bg-blue-600 text-white rounded-xl
                          hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
@@ -138,20 +166,9 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
           
           {selectedModels.map((model) => (
-            <div
-              key={model.id}
-              className=" text-white group text-center p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm"
-            >
-              <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">{model.name}</h4>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{model.provider}</p>
-              <textarea
-                name={`response-${model.id}`}
-                id=""
-                cols={40}
-                rows={6}
-                className="w-full border-2 border-blue-300 rounded-2xl p-2"
-              ></textarea>
-            </div>
+          
+          <Llmresponse model={model} llmResponses={llmResponses} />
+          
           ))}
 
         </div>
