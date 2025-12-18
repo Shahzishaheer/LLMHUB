@@ -1,46 +1,54 @@
 import React from 'react'
 import type { JSX } from 'react'
 import { marked } from "marked";
+
 const sanitizeResponse = (response: string): string => {
-    try {
-      let html = marked.parse(response) as string;
-      html = html.replace(/<(h[1-3])>(.*?)<\/\1>/i, '<h1 class="main-heading">$2</h1>');
-      return html;
-    } catch (error) {
-      console.error("Error sanitizing response:", error);
-      return response;
-    }
-  };
+  try {
+    let html = marked.parse(response) as string;
+    // Style headings and code blocks for the UI
+    html = html.replace(/<(h[1-3])>(.*?)<\/\1>/gi, '<h2 class="llm-heading">$2</h2>');
+    html = html.replace(/<pre>/g, '<pre class="llm-code">');
+    return html;
+  } catch (error) {
+    console.error("Error sanitizing response:", error);
+    return response;
+  }
+};
+
 interface LlmResponseProps {
   model: { id: string; name: string; provider?: string };
-  llmResponses?: string[];
+  llmResponses?: { modelId: string; provider?: string; answer: string }[];
 }
 
 const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
-    const { model , llmResponses } = props;
-    const filteredResponses = (llmResponses || []).filter((response: string) => response && response.trim().length > 0);
-    if (filteredResponses.length === 0) return null;
-  return (
-   <>
+  const { model, llmResponses } = props;
+  const answers = (llmResponses || [])
+    .filter((r) => r && r.answer && r.modelId === model.id)
+    .map((r) => ({ text: r.answer, provider: r.provider }));
 
-    <div  key={model.id}
-      className="text-white group text-center p-4 rounded-2xl bg-white/50 dark:bg-gray-800/50 border border-blue-100 dark:border-gray-700/50 backdrop-blur-sm flex flex-col max-h-96"
-            >
-              <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">{model.name}</h4>
-              <hr className="border-t border-gray-200 dark:border-gray-700 my-2" />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{model.provider}</p>
-                <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg text-left flex-1 overflow-y-auto max-h-72">
-                   {filteredResponses.map((response: string, index: number) => (
-                         <p
-                           key={index}
-                           className="mb-2 text-gray-800 dark:text-gray-200 line-hight-relaxed"
-                           dangerouslySetInnerHTML={{ __html: sanitizeResponse(response) }}
-                         />
-                   ))}
-                </div>
-            </div>
-   </>
-  )
-}
+  if (answers.length === 0) return null;
+
+  const latest = answers[answers.length - 1];
+
+  return (
+    <div
+      key={model.id}
+      className="flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-700 w-full max-w-md mx-auto"
+    >
+      <div className="bg-gray-900/90 text-center py-4 px-6">
+        <h3 className="text-white text-lg font-semibold">{model.name}</h3>
+        <p className="text-xs text-gray-400 mt-1">{latest.provider ?? model.provider}</p>
+      </div>
+
+      <div className="p-4 bg-gray-800/60 text-left flex-1 overflow-y-auto max-h-80">
+        {answers.map((ans, idx) => (
+          <article key={idx} className="mb-4 prose prose-invert max-w-none text-white">
+            <div dangerouslySetInnerHTML={{ __html: sanitizeResponse(ans.text) }} />
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default Llmresponse;

@@ -28,7 +28,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
   onSelectionChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModels, setSelectedModels] = useState<Model[]>([]);
+  const [selectedModels, setSelectedModels] = useState<Model[]>([]); // Default to empty selection
   const keyRef = useRef<string | null>(null); // Replace useState with useRef
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -41,6 +41,19 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // On mount, default-select the Nvidia model and notify parent
+  useEffect(() => {
+    if (selectedModels.length === 0) {
+      const defaultModel = AVAILABLE_MODELS.find((m) => m.id === 'Nvidia');
+      if (defaultModel) {
+        setSelectedModels([defaultModel]);
+        onSelectionChange([defaultModel]);
+      }
+    }
+    // Run only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   

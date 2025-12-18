@@ -16,7 +16,8 @@ const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Model[]>([]);
-  const [llmResponses, setLlmResponses] = useState<string[]>([]);
+  type ModelResponse = { modelId: string; provider?: string; answer: string };
+  const [llmResponses, setLlmResponses] = useState<ModelResponse[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,29 +30,60 @@ const HeroSection = () => {
   };
 
   const handlellmrequest = async (prompt: string): Promise<void> => {
-    setLlmResponses([]); // Clear previous responses
-  try {
-    const response = await fetch('http://localhost:8000/api/v1/llm/openrouter', {    
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt}),
-    });
+    // Clear previous responses
+    setLlmResponses([]);
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    if (!prompt.trim()) return;
+
+    const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' }];
+
+    for (const model of modelsToCall) {
+        try {
+        if (model.provider === 'OpenRouter') {
+          const response = await fetch('http://localhost:8000/api/v1/llm/openrouter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}` }]);
+            continue;
+          }
+
+          const data = await response.json();
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer }]);
+        } else {
+          // For other providers (e.g., Gemini), fetch API key from localStorage and send to backend
+          const apikey = localStorage.getItem(model.id);
+          if (!apikey) {
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage' }]);
+            continue;
+          }
+
+          const response = await fetch('http://localhost:8000/api/v1/llm/customllm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, apikey, modelId: model.id }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}` }]);
+            continue;
+          }
+
+          const data = await response.json();
+          // Backend should return { answer, provider }
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer }]);
+        }
+      } catch (err) {
+        console.error(`Error calling model ${model.name}:`, err);
+        setLlmResponses((prev) => [...prev, `${model.name}: Network error`]);
+      }
     }
-    const data = await response.json();
-    
-    setLlmResponses((prevResponses) => [...prevResponses, data.answer]);
-     
-       
-  } catch (error) {
-    console.error('Error making LLM request:', error);
-  }
-
-};
+  };
   
   const handleModelSelectionChange = (models: Model[]) => {
     setSelectedModels(models);
