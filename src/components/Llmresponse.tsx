@@ -2,6 +2,7 @@ import React from 'react'
 import type { JSX } from 'react'
 import { marked } from "marked";
 import { CheckCheck, Copy, X } from 'lucide-react';
+import { BeatLoader } from 'react-spinners';
 
 const sanitizeResponse = (response: string): string => {
 
@@ -24,7 +25,7 @@ interface LlmResponseProps {
 }
 
 const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
-  const { model, llmResponses, onClear } = props;
+  const { model, llmResponses, onClear ,load} = props;
   const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null);
   const answers = (llmResponses || [])
     .filter((r) => r && r.answer && r.modelId === model.id)
@@ -52,7 +53,7 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
       <X className="relative right-1 top-2 cursor-pointer text-gray-400 float-right hover:text-red-600" onClick={onClear} />
         <h3 className="text-white text-lg font-semibold">{model.name}</h3>
 
-        {/* <p className="text-xs text-gray-400 mt-1">{latest.provider ?? model.provider}</p> */}
+        <p className="text-xs text-gray-400 mt-1">{latest.provider ?? model.provider}</p>
       </div>
 
       <div className="p-4 bg-gray-800/60 text-left flex-1 overflow-y-auto max-h-80">
@@ -72,6 +73,7 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
             </article>
           </div>
         ))}
+        { load && <div className="flex justify-start mb-6"><BeatLoader color='#ffffff' size={10} /></div> }
       </div>
     </div>
     </>

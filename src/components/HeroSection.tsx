@@ -37,69 +37,86 @@ const HeroSection = () => {
 
     const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },{id:"z-ai", name: "GLM", provider: "OpenRouter"}];
 
-    for (const model of modelsToCall) {
+    console.log('Models to call:', modelsToCall);
+    
+    // Call all models in parallel
+    const promises = modelsToCall.map(async (model) => {
+        console.log('Processing model:', model.id, model.name);
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+        const timeoutId = setTimeout(() => controller.abort(), 180000); // 180 seconds timeout
 
         try {
-        if (model.provider === 'OpenRouter') {
-          const response = await fetch('http://localhost:8000/api/v1/llm/openrouter', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt }),
-            signal: controller.signal,
-          });
-          clearTimeout(timeoutId);
+          if (model.provider === 'OpenRouter') {
+            // Determine the endpoint based on model id
+            let endpoint = '';
 
-          if (!response.ok) {
-            const errorText = await response.text();
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
-            continue;
-          }
-
-          const data = await response.json();
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
-          setLoading(false);
-        } else {
-          // For other providers (e.g., Gemini), fetch API key from localStorage and send to backend
-          const apikey = localStorage.getItem(model.id);
-          if (!apikey) {
+            if (model.id === 'z-ai' || model.id === 'GLM') {
+              endpoint = `${import.meta.env.VITE_API_URL}llm/glm`;
+              console.log('Calling GLM endpoint:', endpoint);
+            } else {
+              endpoint = `${import.meta.env.VITE_API_URL}llm/openrouter`;
+              console.log('Calling OpenRouter endpoint:', endpoint);
+            }
+            console.log("Endpoint", endpoint);
+            
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt }),
+              signal: controller.signal,
+            });
             clearTimeout(timeoutId);
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage', prompt }]);
-            continue;
-          }
 
-          const response = await fetch('http://localhost:8000/api/v1/llm/customllm', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, apikey, modelId: model.id }),
-            signal: controller.signal,
-          });
+            if (!response.ok) {
+              const errorText = await response.text();
+              setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
+              return;
+            }
+
+            const data = await response.json();
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+          } else {
+            // For other providers (e.g., Gemini), fetch API key from localStorage and send to backend
+            const apikey = localStorage.getItem(model.id);
+            if (!apikey) {
+              clearTimeout(timeoutId);
+              setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage', prompt }]);
+              return;
+            }
+
+            const response = await fetch(`${import.meta.env.VITE_API_URL}llm/customllm`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt, apikey, modelId: model.id }),
+              signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
+              return;
+            }
+
+            const data = await response.json();
+            // Backend should return { answer, provider }
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+          }
+        } catch (err) {
           clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
-            continue;
+          if (err instanceof Error && err.name === 'AbortError') {
+            console.error(`Request to ${model.name} timed out`);
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Request timed out`, prompt }]);
+          } else {
+            console.error(`Error calling model ${model.name}:`, err);
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Network error`, prompt }]);
           }
+        }
+    });
 
-          const data = await response.json();
-          // Backend should return { answer, provider }
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
-          setLoading(false);
-        }
-      } catch (err) {
-        clearTimeout(timeoutId);
-        if (err instanceof Error && err.name === 'AbortError') {
-          console.error(`Request to ${model.name} timed out`);
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Request timed out`, prompt }]);
-        } else {
-          console.error(`Error calling model ${model.name}:`, err);
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Network error`, prompt }]);
-        }
-        setLoading(false);
-      }
-    }
+    // Wait for all API calls to complete
+    await Promise.allSettled(promises);
+    setLoading(false);
   };
   
   const handleModelSelectionChange = (models: Model[]) => {
@@ -210,14 +227,15 @@ const HeroSection = () => {
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+        <div className=" container grid grid-cols-2 md:grid-cols-3 gap-8 mt-16">
           
           {selectedModels.map((model) => 
-            loading ? <BounceLoader  color='#ffff' className=' align-middle' key={model.id} /> :
+           
             <Llmresponse 
               key={model.id}
               model={model} 
               llmResponses={llmResponses} 
+              load={loading}
               onClear={() => handleClearResponse(model.id)}
             />
           )}
