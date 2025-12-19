@@ -2,6 +2,8 @@ import { useState } from 'react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
 import { marked } from "marked";
+import {  LoaderCircle, MoveRight } from 'lucide-react';
+import { BounceLoader } from 'react-spinners';
 // import { Send, Sparkles, Zap } from 'lucide-react';
 
 interface Model {
@@ -15,50 +17,55 @@ interface Model {
 const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Model[]>([]);
-  type ModelResponse = { modelId: string; provider?: string; answer: string };
+  type ModelResponse = { modelId: string; provider?: string; answer: string; prompt: string };
   const [llmResponses, setLlmResponses] = useState<ModelResponse[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
-      console.log('Message submitted:', message);
-      console.log('Selected model:', selectedModels[0]);
-      // Handle message submission here
+      handlellmrequest(message);
+      setLoading(true);
       setMessage('');
     }
   };
 
   const handlellmrequest = async (prompt: string): Promise<void> => {
-    // Clear previous responses
-    setLlmResponses([]);
 
     if (!prompt.trim()) return;
 
-    const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' }];
+    const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },{id:"z-ai", name: "GLM", provider: "OpenRouter"}];
 
     for (const model of modelsToCall) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+
         try {
         if (model.provider === 'OpenRouter') {
           const response = await fetch('http://localhost:8000/api/v1/llm/openrouter', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prompt }),
+            signal: controller.signal,
           });
+          clearTimeout(timeoutId);
 
           if (!response.ok) {
             const errorText = await response.text();
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}` }]);
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
             continue;
           }
 
           const data = await response.json();
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer }]);
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+          setLoading(false);
         } else {
           // For other providers (e.g., Gemini), fetch API key from localStorage and send to backend
           const apikey = localStorage.getItem(model.id);
           if (!apikey) {
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage' }]);
+            clearTimeout(timeoutId);
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage', prompt }]);
             continue;
           }
 
@@ -66,21 +73,31 @@ const HeroSection = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prompt, apikey, modelId: model.id }),
+            signal: controller.signal,
           });
+          clearTimeout(timeoutId);
 
           if (!response.ok) {
             const errorText = await response.text();
-            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}` }]);
+            setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
             continue;
           }
 
           const data = await response.json();
           // Backend should return { answer, provider }
-          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer }]);
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+          setLoading(false);
         }
       } catch (err) {
-        console.error(`Error calling model ${model.name}:`, err);
-        setLlmResponses((prev) => [...prev, `${model.name}: Network error`]);
+        clearTimeout(timeoutId);
+        if (err instanceof Error && err.name === 'AbortError') {
+          console.error(`Request to ${model.name} timed out`);
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Request timed out`, prompt }]);
+        } else {
+          console.error(`Error calling model ${model.name}:`, err);
+          setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Network error`, prompt }]);
+        }
+        setLoading(false);
       }
     }
   };
@@ -89,6 +106,9 @@ const HeroSection = () => {
     setSelectedModels(models);
   };
 
+  const handleClearResponse = (modelId: string) => {
+    setLlmResponses((prev) => prev.filter((r) => r.modelId !== modelId));
+  };
   
   return (
     <div className="min-h-[100vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
@@ -147,18 +167,15 @@ const HeroSection = () => {
               />
               <button
                 type="submit"
-                 onClick={() => handlellmrequest(message)}
                 disabled={!message.trim()}
                 className="absolute right-3 p-3.5 bg-blue-600 text-white rounded-xl
-                         hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
+                         hover:bg-blue-700 disabled:cursor-not-allowed
                          transition-all duration-200 hover:scale-110 active:scale-95
                          disabled:hover:scale-100 shadow-lg hover:shadow-xl
                          disabled:opacity-50 group"
                 aria-label="Send message"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
+                {loading ? <LoaderCircle />: <MoveRight /> }
               </button>
             </div>
           </form>
@@ -184,9 +201,7 @@ const HeroSection = () => {
                            hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md
                            flex items-center gap-2 backdrop-blur-sm"
                 >
-                  {/* <span className="text-base group-hover:scale-110 transition-transform duration-200">
-                    {suggestion.icon}
-                  </span> */}
+                   
                   <span>{suggestion.text}</span>
                 </button>
               ))}
@@ -197,11 +212,15 @@ const HeroSection = () => {
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
           
-          {selectedModels.map((model) => (
-          
-          <Llmresponse model={model} llmResponses={llmResponses} />
-          
-          ))}
+          {selectedModels.map((model) => 
+            loading ? <BounceLoader  color='#ffff' className=' align-middle' key={model.id} /> :
+            <Llmresponse 
+              key={model.id}
+              model={model} 
+              llmResponses={llmResponses} 
+              onClear={() => handleClearResponse(model.id)}
+            />
+          )}
 
         </div>
       </div>

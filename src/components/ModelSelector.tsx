@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 interface Model {
   id: string;
@@ -13,10 +13,11 @@ interface ModelSelectorProps {
 }
 
 const AVAILABLE_MODELS: Model[] = [
+  { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },
+  {id:"GLM", name: "GLM", provider: "OpenRouter"},
   { id: 'gemini', name: 'Gemini', provider: 'Google' },
   { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
-  { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },
-  // { id: 'gemini-pro', name: 'Gemini Pro', provider: 'Google', },
+  { id: 'claude', name: 'Claude', provider: 'Anthropic', },
   // { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
   // { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
 ];
@@ -43,13 +44,13 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // On mount, default-select the Nvidia model and notify parent
-  useEffect(() => {
+  // On mount, default-select the Nvidia and GLM models and notify parent
+  useMemo(() => {
     if (selectedModels.length === 0) {
-      const defaultModel = AVAILABLE_MODELS.find((m) => m.id === 'Nvidia');
-      if (defaultModel) {
-        setSelectedModels([defaultModel]);
-        onSelectionChange([defaultModel]);
+      const defaultModels = AVAILABLE_MODELS.filter((m) => m.id === 'Nvidia' || m.id === 'GLM');
+      if (defaultModels.length > 0) {
+        setSelectedModels(defaultModels);
+        onSelectionChange(defaultModels);
       }
     }
     // Run only on mount
@@ -64,8 +65,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       // Multi-select mode
       const isSelected = selectedModels.some(m => m.id === model.id);
       if (isSelected) {
-        // Don't allow deselecting if it's the only one
-        if (selectedModels.length === 1) return;
         newSelection = selectedModels.filter(m => m.id !== model.id);
       } else {
         newSelection = [...selectedModels, model];
@@ -129,7 +128,8 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 
             {AVAILABLE_MODELS.map((model) => {
   const isSelected = isModelSelected(model.id);
-  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`); // Check if API key exists
+  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`) || model.id === 'Nvidia' || model.id === 'GLM'; // Check if API key exists
+
 
   return (
     <button

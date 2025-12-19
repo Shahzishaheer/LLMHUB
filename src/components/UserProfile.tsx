@@ -57,32 +57,14 @@ const UserProfile = (): JSX.Element => {
     icon: '🔮'
   },
     {
-      id: 'Nvidia',
-      name: 'Nvidia',
+      id: 'claude',
+      name: 'Anthropic Claude',
       value: '',
-      placeholder: 'hf_...',
-      description: 'Access to Nvida models and datasets',
-      website: ' openrouter.ai',
-      icon: '🤗'
-    },
-    // {
-    //   id: 'cohere',
-    //   name: 'Cohere',
-    //   value: '',
-    //   placeholder: 'co-...',
-    //   description: 'Cohere Command and Embed models',
-    //   website: 'https://dashboard.cohere.ai/api-keys',
-    //   icon: '⚡'
-    // },
-    // {
-    //   id: 'mistral',
-    //   name: 'Mistral AI',
-    //   value: '',
-    //   placeholder: 'mi-...',
-    //   description: 'Mistral 7B, Mixtral and other Mistral models',
-    //   website: 'https://console.mistral.ai/api-keys/',
-    //   icon: '🌪️'
-    // }
+      placeholder: 'sk-ant-...',
+      description: 'Claude 3 and other Anthropic models',
+      website: 'https://console.anthropic.com/account/keys',
+      icon: '🧠'
+    }
   ]);
   
 
