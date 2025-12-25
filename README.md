@@ -5,6 +5,21 @@
 **LLMHUB** is a sophisticated, production-ready web platform that aggregates multiple artificial intelligence language models and advanced image synthesis capabilities within a unified, user-centric interface. The platform enables seamless interaction with diverse LLM providers, facilitates real-time comparative analysis of model outputs, and provides state-of-the-art text-to-image generation functionality. This full-stack application demonstrates enterprise-grade architecture, comprehensive security implementation, and optimal user experience design principles.
 
 ---
+## Visual Documentation
+
+### Primary User Interface - Multi-Model Query Interface
+<img width="1600" height="777" alt="image" src="https://github.com/user-attachments/assets/44037db4-d920-4012-a663-257d6d56042f" />
+
+### Image Generation Module - Synthesis Interface
+<img width="1600" height="774" alt="image" src="https://github.com/user-attachments/assets/5f19024c-4cce-40df-9e2e-422cd9887975" />
+
+
+### UI Component System
+<img width="1845" height="606" alt="image" src="https://github.com/user-attachments/assets/a64196f5-0136-47cb-86f0-ac1b67c544fb" />
+
+![Uploading image.png…]()
+
+---
 
 ## Core Capabilities
 
@@ -57,20 +72,7 @@
 
 ---
 
-## Visual Documentation
 
-### Primary User Interface - Multi-Model Query Interface
-![Home Interface](./image/WhatsApp%20Image%202025-12-25%20at%2011.30.06%20AM.jpeg)
-
-### Image Generation Module - Synthesis Interface
-![Image Generation Interface](./image/WhatsApp%20Image%202025-12-25%20at%2011.31.53%20AM.jpeg)
-
-### UI Component System
-<img width="1845" height="606" alt="image" src="https://github.com/user-attachments/assets/a64196f5-0136-47cb-86f0-ac1b67c544fb" />
-
-![Uploading image.png…]()
-
----
 
 ## Technology Stack & Architecture
 
