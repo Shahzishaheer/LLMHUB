@@ -6,6 +6,7 @@ import Accountsetting from './Accountsetting';
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navbarRef = useRef<HTMLElement>(null);
+  const { isSignedIn } = useUser();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -45,9 +46,15 @@ function Navbar() {
         {/* Desktop Navigation Links */}
         <div className="navbar-nav">
          <Link to="/">Home</Link>
-          <Link to="/services">Image Model</Link>
-          <Link to="#about">About</Link>
-          <Link to="#contact">Contact</Link>
+         
+          {isSignedIn ? (
+            <Link to="/imagegenerate">Image Model</Link>
+          ) : (
+            <span className="navbar-link-disabled text-gray-400 cursor-not-allowed " title="Login to access Image Model">
+              Image Model
+            </span>
+          )}
+          
         </div>
 
         {/* Desktop Login/Signup Buttons */}
@@ -86,9 +93,14 @@ function Navbar() {
         <div className="navbar-mobile-menu">
           {/* Navigation Links */}
           <Link to="/" onClick={handleLinkClick}>Home</Link>
-          <Link to="/services" onClick={handleLinkClick}>Image Model</Link>
-          <Link to="#about" onClick={handleLinkClick}>About</Link>
-          <Link to="#contact" onClick={handleLinkClick}>Contact</Link>
+          {isSignedIn ? (
+            <Link to="/imagegenerate" onClick={handleLinkClick}>Image Model</Link>
+          ) : (
+            <span className="navbar-link-disabled text-gray-400 cursor-not-allowed " title="Login to access Image Model">
+              Image Model
+            </span>
+          )}
+          
 
           {/* Auth Buttons */}
           <div className="navbar-mobile-actions">

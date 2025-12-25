@@ -14,10 +14,10 @@ interface ModelSelectorProps {
 
 const AVAILABLE_MODELS: Model[] = [
   { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },
-  {id:"GLM", name: "GLM", provider: "OpenRouter"},
+  {id:"SiliconFlow", name: "Deepseek", provider: "OpenRouter"},
   { id: 'gemini', name: 'Gemini', provider: 'Google' },
-  { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
-  { id: 'claude', name: 'Claude', provider: 'Anthropic', },
+  // { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
+  // { id: 'claude', name: 'Claude', provider: 'Anthropic', },
   // { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
   // { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
 ];
@@ -44,10 +44,10 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // On mount, default-select the Nvidia and GLM models and notify parent
+  // On mount, default-select the Nvidia and SiliconFlow models and notify parent
   useMemo(() => {
     if (selectedModels.length === 0) {
-      const defaultModels = AVAILABLE_MODELS.filter((m) => m.id === 'Nvidia' || m.id === 'GLM');
+      const defaultModels = AVAILABLE_MODELS.filter((m) => m.id === 'Nvidia' || m.id === 'SiliconFlow');
       if (defaultModels.length > 0) {
         setSelectedModels(defaultModels);
         onSelectionChange(defaultModels);
@@ -128,7 +128,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 
             {AVAILABLE_MODELS.map((model) => {
   const isSelected = isModelSelected(model.id);
-  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`) || model.id === 'Nvidia' || model.id === 'GLM'; // Check if API key exists
+  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`) || model.id === 'Nvidia' || model.id === 'SiliconFlow'; // Check if API key exists
 
 
   return (

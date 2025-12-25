@@ -25,7 +25,7 @@ interface LlmResponseProps {
 }
 
 const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
-  const { model, llmResponses, onClear ,load} = props;
+  const { model, llmResponses, onClear } = props;
   const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null);
   const answers = (llmResponses || [])
     .filter((r) => r && r.answer && r.modelId === model.id)
@@ -73,7 +73,7 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
             </article>
           </div>
         ))}
-        { load && <div className="flex justify-start mb-6"><BeatLoader color='#ffffff' size={10} /></div> }
+
       </div>
     </div>
     </>

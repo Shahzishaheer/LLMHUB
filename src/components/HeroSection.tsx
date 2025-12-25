@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
 import { marked } from "marked";
@@ -35,7 +35,7 @@ const HeroSection = () => {
 
     if (!prompt.trim()) return;
 
-    const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },{id:"z-ai", name: "GLM", provider: "OpenRouter"}];
+    const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },{id:"SiliconFlow", name: "Deepseek", provider: "OpenRouter"}];
 
     console.log('Models to call:', modelsToCall);
     
@@ -43,14 +43,14 @@ const HeroSection = () => {
     const promises = modelsToCall.map(async (model) => {
         console.log('Processing model:', model.id, model.name);
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 180000); // 180 seconds timeout
+        const timeoutId = setTimeout(() => controller.abort(), 90000); // 90 seconds timeout
 
         try {
           if (model.provider === 'OpenRouter') {
             // Determine the endpoint based on model id
             let endpoint = '';
 
-            if (model.id === 'z-ai' || model.id === 'GLM') {
+            if (model.id === 'SiliconFlow' || model.id === 'GLM') {
               endpoint = `${import.meta.env.VITE_API_URL}llm/glm`;
               console.log('Calling GLM endpoint:', endpoint);
             } else {
@@ -123,9 +123,9 @@ const HeroSection = () => {
     setSelectedModels(models);
   };
 
-  const handleClearResponse = (modelId: string) => {
+  const handleClearResponse = useCallback((modelId: string) => {
     setLlmResponses((prev) => prev.filter((r) => r.modelId !== modelId));
-  };
+  }, []);
   
   return (
     <div className="min-h-[100vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
@@ -227,19 +227,21 @@ const HeroSection = () => {
         </div>
 
         {/* Features */}
-        <div className=" container grid grid-cols-2 md:grid-cols-3 gap-8 mt-16">
-          
-          {selectedModels.map((model) => 
-           
-            <Llmresponse 
-              key={model.id}
-              model={model} 
-              llmResponses={llmResponses} 
-              load={loading}
-              onClear={() => handleClearResponse(model.id)}
-            />
+        <div className="container grid grid-cols-2 md:grid-cols-2 gap-8 mt-16">
+          {loading ? (
+            <BounceLoader color='#3b82f6' size={24} className='mx-auto align-middle' />
+          ) : (
+            <>
+              {selectedModels.map((model) => (
+                <Llmresponse 
+                  key={model.id}
+                  model={model} 
+                  llmResponses={llmResponses} 
+                  onClear={() => handleClearResponse(model.id)}
+                />
+              ))}
+            </>
           )}
-
         </div>
       </div>
     </div>

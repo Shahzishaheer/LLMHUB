@@ -47,15 +47,15 @@ const UserProfile = (): JSX.Element => {
     //   website: 'https://console.anthropic.com/account/keys',
     //   icon: '🧠'
     // },
-    {
-    id: 'perplexity',
-    name: 'Perplexity AI',
-    value: '',
-    placeholder: 'pplx-...',
-    description: 'Perplexity models including pplx-7b-online, pplx-70b-online',
-    website: 'https://www.perplexity.ai/settings/api',
-    icon: '🔮'
-  },
+  //   {
+  //   id: 'perplexity',
+  //   name: 'Perplexity AI',
+  //   value: '',
+  //   placeholder: 'pplx-...',
+  //   description: 'Perplexity models including pplx-7b-online, pplx-70b-online',
+  //   website: 'https://www.perplexity.ai/settings/api',
+  //   icon: '🔮'
+  // },
     {
       id: 'claude',
       name: 'Anthropic Claude',
