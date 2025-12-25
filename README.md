@@ -66,7 +66,9 @@
 ![Image Generation Interface](./image/WhatsApp%20Image%202025-12-25%20at%2011.31.53%20AM.jpeg)
 
 ### UI Component System
-![Component Library](./image/image.png)
+<img width="1845" height="606" alt="image" src="https://github.com/user-attachments/assets/a64196f5-0136-47cb-86f0-ac1b67c544fb" />
+
+![Uploading image.png…]()
 
 ---
 
