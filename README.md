@@ -63,10 +63,8 @@
 - Graceful degradation for unauthorized access attempts
 
 ---
-
-
-![alt text](<WhatsApp Image 2025-12-25 at 11.30.06 AM.jpeg>)
----
+## visual display of image generation feature
+![alt text](image.png)
 
 ## Technology Stack & Architecture
 
