@@ -59,15 +59,7 @@
 
 ## Visual Documentation
 
-### Primary User Interface - Multi-Model Query Interface
-![Home Interface](./image/WhatsApp%20Image%202025-12-25%20at%2011.30.06%20AM.jpeg)
-
-### Image Generation Module - Synthesis Interface
-![Image Generation Interface](./image/WhatsApp%20Image%202025-12-25%20at%2011.31.53%20AM.jpeg)
-
-### UI Component System
-![Component Library](./image/image.png)
-
+![alt text](<WhatsApp Image 2025-12-25 at 11.30.06 AM.jpeg>)
 ---
 
 ## Technology Stack & Architecture
