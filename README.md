@@ -5,6 +5,13 @@
 **LLMHUB** is a sophisticated, production-ready web platform that aggregates multiple artificial intelligence language models and advanced image synthesis capabilities within a unified, user-centric interface. The platform enables seamless interaction with diverse LLM providers, facilitates real-time comparative analysis of model outputs, and provides state-of-the-art text-to-image generation functionality. This full-stack application demonstrates enterprise-grade architecture, comprehensive security implementation, and optimal user experience design principles.
 
 ---
+## Visual Documentation
+
+### Primary User Interface - Multi-Model Query Interface
+<img width="1600" height="777" alt="image" src="https://github.com/user-attachments/assets/44037db4-d920-4012-a663-257d6d56042f" />
+
+
+---
 
 ## Core Capabilities
 
@@ -57,7 +64,6 @@
 
 ---
 
-## Visual Documentation
 
 ![alt text](<WhatsApp Image 2025-12-25 at 11.30.06 AM.jpeg>)
 ---
