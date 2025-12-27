@@ -10,14 +10,6 @@
 ### Primary User Interface - Multi-Model Query Interface
 <img width="1600" height="777" alt="image" src="https://github.com/user-attachments/assets/44037db4-d920-4012-a663-257d6d56042f" />
 
-### Image Generation Module - Synthesis Interface
-<img width="1600" height="774" alt="image" src="https://github.com/user-attachments/assets/5f19024c-4cce-40df-9e2e-422cd9887975" />
-
-
-### UI Component System
-<img width="1845" height="606" alt="image" src="https://github.com/user-attachments/assets/a64196f5-0136-47cb-86f0-ac1b67c544fb" />
-
-![Uploading image.png…]()
 
 ---
 
