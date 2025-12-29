@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect, type JSX } from 'react';
 import { useClerk, useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
+import { useState, useRef, useEffect, type JSX } from 'react';
 
 const Accountsetting = (): JSX.Element => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

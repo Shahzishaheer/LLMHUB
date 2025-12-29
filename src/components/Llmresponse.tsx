@@ -2,7 +2,6 @@ import React from 'react'
 import type { JSX } from 'react'
 import { marked } from "marked";
 import { CheckCheck, Copy, X } from 'lucide-react';
-import { BeatLoader } from 'react-spinners';
 
 const sanitizeResponse = (response: string): string => {
 

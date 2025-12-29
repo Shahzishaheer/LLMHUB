@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { SignedOut, SignedIn, UserButton, useUser } from '@clerk/clerk-react';
+import { SignedOut, SignedIn, useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router';
 import Accountsetting from './Accountsetting';
 

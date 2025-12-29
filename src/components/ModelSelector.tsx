@@ -30,7 +30,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModels, setSelectedModels] = useState<Model[]>([]); // Default to empty selection
-  const keyRef = useRef<string | null>(null); // Replace useState with useRef
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 

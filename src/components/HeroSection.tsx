@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
-import { marked } from "marked";
 import {  LoaderCircle, MoveRight } from 'lucide-react';
 import { BounceLoader } from 'react-spinners';
 // import { Send, Sparkles, Zap } from 'lucide-react';

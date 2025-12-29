@@ -1,6 +1,5 @@
-import React, { use, useEffect, useState, type JSX } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import Cookies from 'js-cookie';
+import { useEffect, useState, type JSX } from 'react';
 
 interface ApiKey {
   id: string;
@@ -69,7 +68,6 @@ const UserProfile = (): JSX.Element => {
   
 
   const [showValues, setShowValues] = useState<{ [key: string]: boolean }>({});
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
  //api keys persistence with localStorage and remove form when input free
   useEffect(() => {
   setApiKeys(prev =>
