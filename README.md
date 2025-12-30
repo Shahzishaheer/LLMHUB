@@ -6,7 +6,7 @@
 
 ---
 ## Visual Documentation
-
+ ![alt text](image.png)
 ### Primary User Interface - Multi-Model Query Interface
 
 
