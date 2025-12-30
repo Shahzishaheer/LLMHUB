@@ -7,7 +7,6 @@
 ---
 ## Visual Documentation
 
-### Primary User Interface - Multi-Model Query Interface
  ![alt text](llmhub.png)
 
 
