@@ -8,7 +8,8 @@
 ## Visual Documentation
 
 ### Primary User Interface - Multi-Model Query Interface
-<img width="1600" height="777" alt="image" src="https://github.com/user-attachments/assets/44037db4-d920-4012-a663-257d6d56042f" />
+ ![alt text](llmhub.png)
+
 
 
 ---
