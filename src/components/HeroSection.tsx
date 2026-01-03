@@ -228,7 +228,9 @@ const HeroSection = () => {
         {/* Features */}
         <div className="container grid grid-cols-2 md:grid-cols-2 gap-8 mt-16">
           {loading ? (
-            <BounceLoader color='#3b82f6' size={24} className='mx-auto align-middle' />
+            <div className="col-span-2 flex items-center justify-center py-12">
+              <BounceLoader color='#3b82f6' size={30} />
+            </div>
           ) : (
             <>
               {selectedModels.map((model) => (
