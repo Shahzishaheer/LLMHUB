@@ -19,7 +19,7 @@ const Imagegenerate = () => {
     setLastPrompt(currentPrompt);
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/image/image-generate', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}image/image-generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
