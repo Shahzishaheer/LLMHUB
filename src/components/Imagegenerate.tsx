@@ -48,55 +48,55 @@ const Imagegenerate = () => {
         
         {/* Title */}
         <div className="text-center py-4">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
             Image Generator
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2">
             Describe an image and AI will create it
           </p>
         </div>
 
         {/* Chat Area */}
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 min-h-[300px] bg-gray-50 dark:bg-gray-800">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 md:p-4 min-h-[250px] md:min-h-[300px] bg-gray-50 dark:bg-gray-800">
           {lastPrompt ? (
             <div className="space-y-4">
               {/* User Message */}
               <div className="flex justify-end">
-                <div className="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-[80%]">
-                  <p className="text-sm">{lastPrompt}</p>
+                <div className="bg-blue-600 text-white px-3 py-2 rounded-lg max-w-[85%] md:max-w-[80%]">
+                  <p className="text-xs md:text-sm">{lastPrompt}</p>
                 </div>
               </div>
 
               {/* AI Response */}
               <div className="flex justify-start">
-                <div className="bg-white dark:bg-gray-700 px-4 py-3 rounded-lg w-full">
+                <div className="bg-white dark:bg-gray-700 px-3 py-3 md:px-4 rounded-lg w-full">
                   {loading ? (
                     <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span className="text-sm">Generating...</span>
+                      <span className="text-xs md:text-sm">Generating...</span>
                     </div>
                   ) : error ? (
-                    <p className="text-sm text-red-500">{error}</p>
+                    <p className="text-xs md:text-sm text-red-500">{error}</p>
                   ) : generatedImage ? (
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex flex-col items-center">
                       <img
                         src={generatedImage}
                         alt={lastPrompt}
-                        className="max-w-sm rounded-lg"
+                        className="w-full max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
                       />
                       <div className="flex gap-2">
                         <button 
-                          className="p-2 hover:bg-gray-100 "
+                          className="p-2  "
                           title="Download"
                         >
-                          <Download className="w-4 h-4 hover:text-amber-100" />
+                          <Download className="w-4 h-4 hover:text-amber-100 cursor-pointer" />
                         </button>
                         <button
                           onClick={handleGenerate}
-                          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
+                          className="p-2 "
                           title="Regenerate"
                         >
-                          <RefreshCw className="w-4 h-4" />
+                          <RefreshCw className="w-4 h-4  hover:text-amber-100 cursor-pointer" />
                         </button>
                       </div>
                     </div>
@@ -122,12 +122,12 @@ const Imagegenerate = () => {
               placeholder="Describe your image..."
               className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
                        focus:outline-none focus:border-blue-500
-                       dark:bg-gray-800 dark:text-white"
+                       dark:bg-gray-800 dark:text-white text-sm"
             />
             <button
               type="submit"
               disabled={loading || !prompt.trim()}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg
+              className="px-4 py-3 bg-blue-600 text-white rounded-lg whitespace-nowrap
                        hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MoveRight className="w-5 h-5" />}

@@ -226,9 +226,9 @@ const HeroSection = () => {
         </div>
 
         {/* Features */}
-        <div className="container grid grid-cols-2 md:grid-cols-2 gap-8 mt-16">
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
           {loading ? (
-            <div className="col-span-2 flex items-center justify-center py-12">
+            <div className="col-span-1 md:col-span-2 flex items-center justify-center py-12">
               <BounceLoader color='#3b82f6' size={30} />
             </div>
           ) : (
