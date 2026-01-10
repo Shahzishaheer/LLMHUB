@@ -1,6 +1,6 @@
 import { useUser } from '@clerk/clerk-react';
 import { useEffect, useState, type JSX } from 'react';
-import { Key, Eye, EyeOff, X, ExternalLink, Shield, User, Mail, CheckCircle } from 'lucide-react';
+import { Key, Eye, EyeOff, X, ExternalLink, Shield, Mail, CheckCircle } from 'lucide-react';
 
 interface ApiKey {
   id: string;
