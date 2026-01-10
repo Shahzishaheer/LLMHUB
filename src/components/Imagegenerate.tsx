@@ -42,6 +42,48 @@ const Imagegenerate = () => {
     }
   };
 
+  const handleRegenerate = async () => {
+    if (!lastPrompt) return;
+
+    setLoading(true);
+    setError(null);
+    setGeneratedImage(null);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}image/image-generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: lastPrompt }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+
+      const data = await response.json();
+      setGeneratedImage(data.imageUrl);
+      
+    } catch (err) {
+      setError('Failed to generate image. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!generatedImage) return;
+
+    // Create a temporary anchor element
+    const link = document.createElement('a');
+    link.href = generatedImage;
+    link.download = `ai-image-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 bg-white dark:bg-gray-900">
       <div className="max-w-3xl w-full space-y-6">
@@ -86,17 +128,19 @@ const Imagegenerate = () => {
                       />
                       <div className="flex gap-2">
                         <button 
+                          onClick={handleDownload}
                           className="p-2  "
                           title="Download"
                         >
                           <Download className="w-4 h-4 hover:text-amber-100 cursor-pointer" />
                         </button>
                         <button
-                          onClick={handleGenerate}
+                          onClick={handleRegenerate}
+                          disabled={loading}
                           className="p-2 "
                           title="Regenerate"
                         >
-                          <RefreshCw className="w-4 h-4  hover:text-amber-100 cursor-pointer" />
+                          <RefreshCw className={`w-4 h-4 hover:text-amber-100 cursor-pointer ${loading ? 'animate-spin' : ''}`} />
                         </button>
                       </div>
                     </div>
