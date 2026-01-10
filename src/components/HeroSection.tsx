@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
-import {  LoaderCircle, MoveRight } from 'lucide-react';
+import {  Loader2, LoaderCircle, MoveRight } from 'lucide-react';
 import { BounceLoader } from 'react-spinners';
 // import { Send, Sparkles, Zap } from 'lucide-react';
 
@@ -17,6 +17,7 @@ const HeroSection = () => {
   const [message, setMessage] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingModels, setLoadingModels] = useState<Set<string>>(new Set());
   const [selectedModels, setSelectedModels] = useState<Model[]>([]);
   type ModelResponse = { modelId: string; provider?: string; answer: string; prompt: string };
   const [llmResponses, setLlmResponses] = useState<ModelResponse[]>([]);
@@ -37,6 +38,9 @@ const HeroSection = () => {
     const modelsToCall = selectedModels.length ? selectedModels : [{ id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },{id:"SiliconFlow", name: "Deepseek", provider: "OpenRouter"}];
 
     console.log('Models to call:', modelsToCall);
+    
+    // Set all models as loading
+    setLoadingModels(new Set(modelsToCall.map(m => m.id)));
     
     // Call all models in parallel
     const promises = modelsToCall.map(async (model) => {
@@ -69,17 +73,32 @@ const HeroSection = () => {
             if (!response.ok) {
               const errorText = await response.text();
               setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
+              setLoadingModels((prev) => {
+                const next = new Set(prev);
+                next.delete(model.id);
+                return next;
+              });
               return;
             }
 
             const data = await response.json();
             setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+            setLoadingModels((prev) => {
+              const next = new Set(prev);
+              next.delete(model.id);
+              return next;
+            });
           } else {
             // For other providers (e.g., Gemini), fetch API key from localStorage and send to backend
             const apikey = localStorage.getItem(model.id);
             if (!apikey) {
               clearTimeout(timeoutId);
               setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: 'API key not found in localStorage', prompt }]);
+              setLoadingModels((prev) => {
+                const next = new Set(prev);
+                next.delete(model.id);
+                return next;
+              });
               return;
             }
 
@@ -94,12 +113,22 @@ const HeroSection = () => {
             if (!response.ok) {
               const errorText = await response.text();
               setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `Error ${response.status} - ${errorText}`, prompt }]);
+              setLoadingModels((prev) => {
+                const next = new Set(prev);
+                next.delete(model.id);
+                return next;
+              });
               return;
             }
 
             const data = await response.json();
             // Backend should return { answer, provider }
             setLlmResponses((prev) => [...prev, { modelId: model.id, provider: data.provider ?? model.provider, answer: data.answer, prompt }]);
+            setLoadingModels((prev) => {
+              const next = new Set(prev);
+              next.delete(model.id);
+              return next;
+            });
           }
         } catch (err) {
           clearTimeout(timeoutId);
@@ -110,6 +139,11 @@ const HeroSection = () => {
             console.error(`Error calling model ${model.name}:`, err);
             setLlmResponses((prev) => [...prev, { modelId: model.id, provider: model.provider, answer: `${model.name}: Network error`, prompt }]);
           }
+          setLoadingModels((prev) => {
+            const next = new Set(prev);
+            next.delete(model.id);
+            return next;
+          });
         }
     });
 
@@ -191,7 +225,7 @@ const HeroSection = () => {
                          disabled:opacity-50 group"
                 aria-label="Send message"
               >
-                {loading ? <LoaderCircle />: <MoveRight /> }
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" />: <MoveRight /> }
               </button>
             </div>
           </form>
@@ -226,23 +260,44 @@ const HeroSection = () => {
         </div>
 
         {/* Features */}
-        <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
-          {loading ? (
-            <div className="col-span-1 md:col-span-2 flex items-center justify-center py-12">
-              <BounceLoader color='#3b82f6' size={30} />
-            </div>
-          ) : (
-            <>
-              {selectedModels.map((model) => (
-                <Llmresponse 
-                  key={model.id}
-                  model={model} 
-                  llmResponses={llmResponses} 
-                  onClear={() => handleClearResponse(model.id)}
-                />
-              ))}
-            </>
-          )}
+        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+          {/* Show loading cards for models being queried */}
+          {Array.from(loadingModels).map((modelId) => {
+            const model = selectedModels.find(m => m.id === modelId) || 
+                         { id: modelId, name: modelId, provider: 'Loading' };
+            return (
+              <div
+                key={`loading-${modelId}`}
+                className="flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-700 w-full h-full"
+              >
+                <div className="bg-gray-900/90 text-center py-4 px-6">
+                  <h3 className="text-white text-lg font-semibold">{model.name}</h3>
+                  <p className="text-xs text-gray-400 mt-1">{model.provider}</p>
+                </div>
+                <div className="p-8 bg-gray-800/60 flex items-center justify-center min-h-[200px]">
+                  <div className="text-center space-y-3">
+                    <Loader2 color='#3b82f6' size={40}  className='animate-spin'/>
+                    <p className="text-gray-400 text-sm">Generating response...</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Show responses for completed models */}
+          {selectedModels.map((model) => {
+            // Only show Llmresponse if not loading
+            if (loadingModels.has(model.id)) return null;
+            
+            return (
+              <Llmresponse 
+                key={model.id}
+                model={model} 
+                llmResponses={llmResponses} 
+                onClear={() => handleClearResponse(model.id)}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
