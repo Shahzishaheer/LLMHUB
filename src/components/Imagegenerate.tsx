@@ -123,18 +123,18 @@ const Imagegenerate = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 px-4 py-8">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-900 px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Section */}
         <div className="text-center space-y-4 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-sm font-medium text-purple-700 dark:text-purple-300">AI Image Generation</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
+            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">AI Image Generation</span>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold">
-            <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-blue-600 dark:text-blue-400">
               Create Stunning Images
             </span>
           </h1>
@@ -153,7 +153,7 @@ const Imagegenerate = () => {
             {/* Input Form */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2 mb-4">
-                <Wand2 className="w-5 h-5 text-purple-600" />
+                <Wand2 className="w-5 h-5 text-blue-600" />
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Describe Your Image</h2>
               </div>
               
@@ -167,9 +167,9 @@ const Imagegenerate = () => {
                     placeholder="Describe your image in detail... (e.g., 'A serene mountain landscape with a waterfall at golden hour')"
                     rows={4}
                     className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl 
-                             focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100
-                             dark:bg-gray-700 dark:text-white dark:focus:border-purple-400
-                             dark:focus:ring-purple-900/50 transition-all duration-300
+                             focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100
+                             dark:bg-gray-700 dark:text-white dark:focus:border-blue-400
+                             dark:focus:ring-blue-900/50 transition-all duration-300
                              placeholder:text-gray-400 dark:placeholder:text-gray-500 resize-none"
                   />
                 </div>
@@ -177,8 +177,8 @@ const Imagegenerate = () => {
                 <button
                   type="submit"
                   disabled={loading || !prompt.trim()}
-                  className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl
-                           hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
+                  className="w-full py-3.5 bg-blue-600 text-white rounded-xl
+                           hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
                            transition-all duration-200 font-semibold shadow-lg hover:shadow-xl
                            disabled:hover:shadow-lg flex items-center justify-center gap-2"
                 >
@@ -210,14 +210,14 @@ const Imagegenerate = () => {
                     key={idx}
                     onClick={() => handlePromptClick(suggestion.text)}
                     className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg
-                             hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200
-                             border border-transparent hover:border-purple-300 dark:hover:border-purple-700
+                             hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200
+                             border border-transparent hover:border-blue-300 dark:hover:border-blue-700
                              group"
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{suggestion.icon}</span>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-purple-600 dark:group-hover:text-purple-400">
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                           {suggestion.text}
                         </p>
                         <span className="text-xs text-gray-500 dark:text-gray-400">{suggestion.category}</span>
@@ -236,7 +236,7 @@ const Imagegenerate = () => {
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-32 px-6">
-                  <BounceLoader color='#9333ea' size={60} />
+                  <BounceLoader color='#2563eb' size={60} />
                   <p className="mt-6 text-gray-600 dark:text-gray-300 font-medium">Creating your masterpiece...</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">This may take 10-30 seconds</p>
                 </div>
@@ -271,7 +271,7 @@ const Imagegenerate = () => {
                           className="p-4 bg-white dark:bg-gray-800 rounded-full hover:scale-110 transition-transform shadow-xl"
                           title="Download"
                         >
-                          <Download className="w-6 h-6 text-purple-600" />
+                          <Download className="w-6 h-6 text-blue-600" />
                         </button>
                         <button
                           onClick={handleRegenerate}
@@ -296,7 +296,7 @@ const Imagegenerate = () => {
                     <div className="flex gap-3 mt-4">
                       <button
                         onClick={() => handleDownload()}
-                        className="flex-1 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center justify-center gap-2"
+                        className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
                       >
                         <Download className="w-4 h-4" />
                         Download
@@ -314,8 +314,8 @@ const Imagegenerate = () => {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-32 px-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
-                    <ImageIcon className="w-10 h-10 text-purple-600 dark:text-purple-400" />
+                  <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
+                    <ImageIcon className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Ready to Create</h3>
                   <p className="text-gray-500 dark:text-gray-400 text-center max-w-md">
@@ -330,7 +330,7 @@ const Imagegenerate = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <ImageIcon className="w-5 h-5 text-purple-600" />
+                    <ImageIcon className="w-5 h-5 text-blue-600" />
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Creations</h2>
                   </div>
                   <button
@@ -382,8 +382,8 @@ const Imagegenerate = () => {
         {/* Features Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
-              <Sparkles className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
+              <Sparkles className="w-6 h-6 text-blue-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">High Quality</h3>
             <p className="text-gray-600 dark:text-gray-400 text-sm">Generate stunning, high-resolution images with advanced AI models</p>
@@ -398,8 +398,8 @@ const Imagegenerate = () => {
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-            <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center mb-4">
-              <Palette className="w-6 h-6 text-pink-600" />
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
+              <Palette className="w-6 h-6 text-blue-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Unlimited Creativity</h3>
             <p className="text-gray-600 dark:text-gray-400 text-sm">Create any style from photorealistic to artistic illustrations</p>

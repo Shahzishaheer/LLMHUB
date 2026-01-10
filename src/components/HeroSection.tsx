@@ -1,9 +1,8 @@
 import { useState, useCallback } from 'react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
-import {  Loader2, LoaderCircle, MoveRight } from 'lucide-react';
+import { Loader2, MoveRight, Sparkles, Zap, Brain, MessageSquare, Lightbulb, TrendingUp } from 'lucide-react';
 import { BounceLoader } from 'react-spinners';
-// import { Send, Sparkles, Zap } from 'lucide-react';
 
 interface Model {
   id: string;
@@ -161,144 +160,264 @@ const HeroSection = () => {
   }, []);
   
   return (
-    <div className="min-h-[100vh] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-white via-blue-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      <div className="max-w-5xl w-full space-y-12">
-        {/* Hero Title */}
-        <div className="text-center space-y-6 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
+        
+        {/* Hero Title Section */}
+        <div className="text-center space-y-6 mb-16 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-5 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4 border border-blue-200 dark:border-blue-800">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">AI-Powered Intelligence</span>
+            <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">AI-Powered Intelligence</span>
           </div>
           
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight  mt-2">
-            <span className="bg-blue-500 bg-clip-text text-transparent ">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight">
+            <span className="text-blue-600 dark:text-blue-400">
               LLMHUB
             </span>
           </h1>
           
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
-            Experience the next generation of AI assistance. 
-            <span className="block mt-2 text-gray-500 dark:text-gray-400">
-              Fast, accurate, and intelligent responses at your fingertips.
+          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+            Compare responses from multiple AI models simultaneously
+            <span className="block mt-2 text-base text-gray-500 dark:text-gray-400">
+              Get diverse perspectives and choose the best answer for your needs
             </span>
           </p>
-        </div>
 
-        {/* Input Section */}
-        <div className="w-full max-w-4xl mx-auto">
-          {/* Model Selector */}
-          <div className="flex items-center mb-4 px-2">
-            <ModelSelector 
-              multiSelect={true}
-              onSelectionChange={handleModelSelectionChange}
-            />
-          </div>
-
-          <form onSubmit={handleSubmit} className="relative group">
-            <div className={`relative flex items-center transition-all duration-300 ${
-              isFocused ? 'scale-[1.02]' : 'scale-100'
-            }`}>
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholder="What would you like to know?"
-                className="w-full px-8 py-5 pr-16 text-lg border-2 border-gray-200 rounded-2xl 
-                         focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100
-                         dark:bg-gray-800/50 dark:border-gray-700 dark:text-white dark:focus:border-blue-400
-                         dark:focus:ring-blue-900/50 backdrop-blur-sm
-                         transition-all duration-300 shadow-xl hover:shadow-2xl
-                         placeholder:text-gray-400 dark:placeholder:text-gray-500"
-              />
-              <button
-                type="submit"
-                disabled={!message.trim()}
-                className="absolute right-3 p-3.5 bg-blue-600 text-white rounded-xl
-                         hover:bg-blue-700 disabled:cursor-not-allowed
-                         transition-all duration-200 hover:scale-110 active:scale-95
-                         disabled:hover:scale-100 shadow-lg hover:shadow-xl
-                         disabled:opacity-50 group"
-                aria-label="Send message"
-              >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" />: <MoveRight /> }
-              </button>
+          {/* Stats */}
+          <div className="flex flex-wrap justify-center gap-8 pt-8">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">3+</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">AI Models</div>
             </div>
-          </form>
-
-          {/* Suggestions */}
-          <div className="mt-8 space-y-3">
-            <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400">
-              Try asking about:
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              {[
-                { text: 'Explain quantum computing',  },
-                { text: 'Write Python code',  },
-                { text: 'Creative writing tips',  },
-                { text: 'Latest tech trends',  }
-              ].map((suggestion) => (
-                <button
-                  key={suggestion.text}
-                  onClick={() => setMessage(suggestion.text)}
-                  className="group px-5 py-2.5 text-sm bg-white dark:bg-gray-800/50 text-gray-700 
-                           dark:text-gray-300 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700/50
-                           transition-all duration-200 border border-gray-200 dark:border-gray-700
-                           hover:border-blue-300 dark:hover:border-blue-700 shadow-sm hover:shadow-md
-                           flex items-center gap-2 backdrop-blur-sm"
-                >
-                   
-                  <span>{suggestion.text}</span>
-                </button>
-              ))}
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">Fast</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Responses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">24/7</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Availability</div>
             </div>
           </div>
         </div>
 
-        {/* Features */}
-        <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
-          {/* Show loading cards for models being queried */}
-          {Array.from(loadingModels).map((modelId) => {
-            const model = selectedModels.find(m => m.id === modelId) || 
-                         { id: modelId, name: modelId, provider: 'Loading' };
-            return (
-              <div
-                key={`loading-${modelId}`}
-                className="flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-700 w-full h-full"
-              >
-                <div className="bg-gray-900/90 text-center py-4 px-6">
-                  <h3 className="text-white text-lg font-semibold">{model.name}</h3>
-                  <p className="text-xs text-gray-400 mt-1">{model.provider}</p>
-                </div>
-                <div className="p-8 bg-gray-800/60 flex items-center justify-center min-h-[200px]">
-                  <div className="text-center space-y-3">
-                    <Loader2 color='#3b82f6' size={40}  className='animate-spin'/>
-                    <p className="text-gray-400 text-sm">Generating response...</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Show responses for completed models */}
-          {selectedModels.map((model) => {
-            // Only show Llmresponse if not loading
-            if (loadingModels.has(model.id)) return null;
+        {/* Main Content Container */}
+        <div className="max-w-5xl mx-auto space-y-8">
+          
+          {/* Input Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8 backdrop-blur-sm">
             
-            return (
-              <Llmresponse 
-                key={model.id}
-                model={model} 
-                llmResponses={llmResponses} 
-                onClear={() => handleClearResponse(model.id)}
+            {/* Model Selector Section */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <Brain className="w-5 h-5 text-blue-600" />
+                  Select AI Models
+                </label>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {selectedModels.length} selected
+                </span>
+              </div>
+              <ModelSelector 
+                multiSelect={true}
+                onSelectionChange={handleModelSelectionChange}
               />
-            );
-          })}
+            </div>
+
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center">
+                <span className="px-3 bg-white dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400">
+                  Ask your question
+                </span>
+              </div>
+            </div>
+
+            {/* Input Form */}
+            <form onSubmit={handleSubmit} className="relative">
+              <div className={`relative transition-all duration-300 ${
+                isFocused ? 'scale-[1.01]' : 'scale-100'
+              }`}>
+                <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  placeholder="Ask me anything... What would you like to know?"
+                  className="w-full pl-14 pr-16 py-5 text-base border-2 border-gray-200 rounded-2xl 
+                           focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100
+                           dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-blue-400
+                           dark:focus:ring-blue-900/50
+                           transition-all duration-300 shadow-sm hover:shadow-md
+                           placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                />
+                <button
+                  type="submit"
+                  disabled={!message.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-3.5 
+                           bg-blue-600 text-white rounded-xl
+                           hover:bg-blue-700 
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-all duration-200 hover:scale-105 active:scale-95
+                           disabled:hover:scale-100 shadow-lg hover:shadow-xl
+                           flex items-center justify-center"
+                  aria-label="Send message"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <MoveRight className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* Quick Suggestions */}
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Lightbulb className="w-4 h-4 text-amber-500" />
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Popular questions:
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { text: 'Explain quantum computing', icon: '⚛️' },
+                  { text: 'Write Python code', icon: '💻' },
+                  { text: 'Creative writing tips', icon: '✍️' },
+                  { text: 'Latest tech trends', icon: '📱' },
+                  { text: 'Solve math problems', icon: '🔢' },
+                  { text: 'Learn a new language', icon: '🌍' }
+                ].map((suggestion) => (
+                  <button
+                    key={suggestion.text}
+                    onClick={() => setMessage(suggestion.text)}
+                    className="group px-4 py-2 text-sm bg-gray-50 dark:bg-gray-700/50 text-gray-700 
+                             dark:text-gray-300 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20
+                             transition-all duration-200 border border-gray-200 dark:border-gray-600
+                             hover:border-blue-300 dark:hover:border-blue-700 
+                             flex items-center gap-2"
+                  >
+                    <span>{suggestion.icon}</span>
+                    <span className="text-xs">{suggestion.text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Features Grid */}
+          {llmResponses.length === 0 && loadingModels.size === 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Multiple Models</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Compare responses from different AI models to get diverse perspectives</p>
+              </div>
+              
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Lightning Fast</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Get instant responses powered by state-of-the-art AI technology</p>
+              </div>
+              
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Best Results</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Choose the most accurate answer from multiple AI perspectives</p>
+              </div>
+            </div>
+          )}
+
+          {/* Responses Grid */}
+          {(llmResponses.length > 0 || loadingModels.size > 0) && (
+            <div>
+              <div className="flex items-center gap-2 mb-6 px-2">
+                <MessageSquare className="w-5 h-5 text-blue-600" />
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                  AI Responses
+                </h2>
+                <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">
+                  {llmResponses.length} of {selectedModels.length} completed
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Show loading cards for models being queried */}
+                {Array.from(loadingModels).map((modelId) => {
+                  const model = selectedModels.find(m => m.id === modelId) || 
+                               { id: modelId, name: modelId, provider: 'Loading' };
+                  return (
+                    <div
+                      key={`loading-${modelId}`}
+                      className="flex flex-col rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-full animate-pulse-slow"
+                    >
+                      <div className="bg-blue-600 text-center py-4 px-6">
+                        <h3 className="text-white text-lg font-bold">{model.name}</h3>
+                        <p className="text-xs text-blue-100 mt-1">{model.provider}</p>
+                      </div>
+                      <div className="p-8 bg-gray-50 dark:bg-gray-800/60 flex items-center justify-center min-h-[250px]">
+                        <div className="text-center space-y-4">
+                          <BounceLoader color='#2563eb' size={50} />
+                          <div className="space-y-2">
+                            <p className="text-gray-600 dark:text-gray-400 font-medium">Thinking...</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-500">Generating response</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Show responses for completed models */}
+                {selectedModels.map((model) => {
+                  if (loadingModels.has(model.id)) return null;
+                  
+                  return (
+                    <Llmresponse 
+                      key={model.id}
+                      model={model} 
+                      llmResponses={llmResponses} 
+                      onClear={() => handleClearResponse(model.id)}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Bottom CTA */}
+        {llmResponses.length === 0 && loadingModels.size === 0 && (
+          <div className="text-center mt-16 space-y-4">
+            <p className="text-gray-500 dark:text-gray-400">
+              Powered by cutting-edge AI technology
+            </p>
+            <div className="flex justify-center gap-6 text-sm text-gray-400 dark:text-gray-500">
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                All systems operational
+              </span>
+              <span>•</span>
+              <span>Fast & Reliable</span>
+              <span>•</span>
+              <span>Free to use</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
