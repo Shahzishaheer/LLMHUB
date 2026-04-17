@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { ChevronDown, Cpu, Sparkles, Check, Lock, Globe, Command } from 'lucide-react';
 
 interface Model {
   id: string;
   name: string;
   provider: string;
-  
+  icon?: React.ReactNode;
 }
 
 interface ModelSelectorProps {
@@ -13,24 +14,17 @@ interface ModelSelectorProps {
 }
 
 const AVAILABLE_MODELS: Model[] = [
-  { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter' },
-  {id:"SiliconFlow", name: "Deepseek", provider: "OpenRouter"},
-  { id: 'gemini', name: 'Gemini', provider: 'Google' },
-  // { id: 'perplexity', name: 'Perplexity AI', provider: 'Perplexity AI' },
-  // { id: 'claude', name: 'Claude', provider: 'Anthropic', },
-  // { id: 'llama-2', name: 'Llama 2', provider: 'Meta' },
-  // { id: 'mistral', name: 'Mistral', provider: 'Mistral AI' },
+  { id: 'Nvidia', name: 'Nvidia', provider: 'OpenRouter', icon: <Cpu className="w-3.5 h-3.5" /> },
+  { id: 'SiliconFlow', name: 'Deepseek', provider: 'OpenRouter', icon: <Globe className="w-3.5 h-3.5" /> },
+  { id: 'gemini', name: 'Gemini', provider: 'Google', icon: <Sparkles className="w-3.5 h-3.5" /> },
 ];
-
-
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({ 
   multiSelect = true, 
   onSelectionChange 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModels, setSelectedModels] = useState<Model[]>([]); // Default to empty selection
-
+  const [selectedModels, setSelectedModels] = useState<Model[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,7 +37,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // On mount, default-select the Nvidia and SiliconFlow models and notify parent
   useMemo(() => {
     if (selectedModels.length === 0) {
       const defaultModels = AVAILABLE_MODELS.filter((m) => m.id === 'Nvidia' || m.id === 'SiliconFlow');
@@ -52,16 +45,11 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
         onSelectionChange(defaultModels);
       }
     }
-    // Run only on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
   const handleModelToggle = (model: Model) => {
     let newSelection: Model[];
-    
     if (multiSelect) {
-      // Multi-select mode
       const isSelected = selectedModels.some(m => m.id === model.id);
       if (isSelected) {
         newSelection = selectedModels.filter(m => m.id !== model.id);
@@ -69,11 +57,9 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
         newSelection = [...selectedModels, model];
       }
     } else {
-      // Single-select mode
       newSelection = [model];
       setIsOpen(false);
     }
-    
     setSelectedModels(newSelection);
     onSelectionChange(newSelection);
   };
@@ -83,93 +69,80 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Trigger Button */}
+    <div className="relative inline-block" ref={dropdownRef}>
+      {/* Trigger Button - Refined Minimalist */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 
-                 border-2 border-gray-200 dark:border-gray-700 rounded-xl
-                 hover:border-blue-400 dark:hover:border-blue-600 
-                 transition-all duration-200 shadow-md hover:shadow-lg
-                 text-sm font-medium text-gray-700 dark:text-gray-300"
+        className={`flex items-center gap-3 px-3 py-2 rounded-xl border transition-all duration-500 ${
+          isOpen ? 'bg-white/5 border-cobalt shadow-[0_0_25px_rgba(0,71,255,0.15)]' : 'bg-transparent border-white/5 hover:border-white/10'
+        }`}
       >
-        {/* <span className="text-base">{selectedModels[0].icon}</span> */}
-        <span className="hidden sm:inline">
+        <div className="p-1.5 rounded-lg bg-cobalt/10 text-cobalt">
+          <Command className="w-3.5 h-3.5" />
+        </div>
+        <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-silver">
           {selectedModels.length === 1 
             ? selectedModels[0].name 
-            : `${selectedModels.length} Models`}
+            : `${selectedModels.length} Cores Active`}
         </span>
-        <svg 
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className={`w-3.5 h-3.5 text-slate/50 transition-transform duration-500 ${isOpen ? 'rotate-180 text-cobalt' : ''}`} />
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - Luxury Utility Style */}
       {isOpen && (
-        <div className="absolute top-full mt-2 w-72 bg-white dark:bg-gray-800 
-                      border-2 border-gray-200 dark:border-gray-700 rounded-xl 
-                      shadow-2xl z-50 overflow-hidden animate-slide-up">
+        <div className="absolute top-full left-0 mt-3 w-72 glass-dark border border-white/10 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.5)] z-50 overflow-hidden animate-reveal origin-top-left">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {multiSelect ? 'Select Models (Multi)' : 'Select Model'}
-            </p>
+          <div className="px-5 py-3 border-b border-white/5 bg-white/2 flex items-center justify-between">
+            <span className="text-[9px] font-black text-slate uppercase tracking-[0.3em]">Processing Grid</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-cobalt animate-pulse" />
           </div>
 
           {/* Model List */}
           <div className="max-h-80 overflow-y-auto">
-
             {AVAILABLE_MODELS.map((model) => {
-  const isSelected = isModelSelected(model.id);
-  const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`) || model.id === 'Nvidia' || model.id === 'SiliconFlow'; // Check if API key exists
+              const isSelected = isModelSelected(model.id);
+              const isApiKeyAvailable = !!localStorage.getItem(`${model.id}`) || model.id === 'Nvidia' || model.id === 'SiliconFlow';
 
+              return (
+                <button
+                  key={model.id}
+                  type="button"
+                  onClick={() => isApiKeyAvailable && handleModelToggle(model)}
+                  className={`w-full px-5 py-4 flex items-center justify-between transition-all duration-300 ${
+                    isSelected ? 'bg-cobalt/[0.08]' : 'hover:bg-white/[0.03]'
+                  } ${!isApiKeyAvailable ? 'opacity-30 cursor-not-allowed grayscale' : ''}`}
+                  disabled={!isApiKeyAvailable}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-xl transition-all duration-300 ${
+                      isSelected ? 'bg-cobalt text-white shadow-[0_0_15px_rgba(0,71,255,0.4)]' : 'bg-white/5 text-slate'
+                    }`}>
+                      {model.icon}
+                    </div>
+                    <div className="text-left">
+                      <p className={`text-[13px] font-bold tracking-tight transition-colors ${isSelected ? 'text-silver' : 'text-slate'}`}>
+                        {model.name}
+                      </p>
+                      <p className="text-[9px] font-bold text-slate/40 uppercase tracking-tighter">
+                        {model.provider}
+                      </p>
+                    </div>
+                  </div>
 
-  return (
-    <button
-      key={model.id}
-      type="button"
-      onClick={() => isApiKeyAvailable && handleModelToggle(model)} // Only toggle if API key is available
-      className={`w-full px-4 py-3 flex items-center gap-3 
-                   hover:bg-blue-50 dark:hover:bg-gray-700/50 
-                   transition-all duration-150 border-b border-gray-100 dark:border-gray-700/50
-                   ${isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''} 
-                   ${!isApiKeyAvailable ? 'opacity-50 cursor-not-allowed' : ''}`} // Add styles for disabled state
-      disabled={!isApiKeyAvailable} // Disable the button if API key is not available
-      
-    >
-      {/* Radio Button */}
-      <div
-        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                    ${
-                      isSelected
-                        ? 'border-blue-600'
-                        : 'border-gray-300 dark:border-gray-600'
-                    }`}
-      >
-        {isSelected && <div className="w-3 h-3 rounded-full bg-blue-600"></div>}
-      </div>
-
-      {/* Model Name */}
-      <div className="flex-1 text-left">
-        <p
-          className={`font-semibold text-sm ${
-            isApiKeyAvailable
-              ? 'text-gray-900 dark:text-white'
-              : 'text-gray-400 dark:text-gray-600'
-          }`} // Change text color if disabled
-        >
-          {model.name}
-        </p>
-      </div>
-    </button>
-  );
-})}
+                  {isSelected && <Check className="w-4 h-4 text-cobalt drop-shadow-[0_0_5px_rgba(0,71,255,0.5)]" />}
+                  {!isApiKeyAvailable && <Lock className="w-3.5 h-3.5 text-slate/30" />}
+                </button>
+              );
+            })}
+          </div>
+          
+          {/* Legend */}
+          <div className="px-5 py-3 bg-black/40 border-t border-white/5">
+             <div className="flex items-center gap-2">
+                <div className="w-1 h-1 rounded-full bg-cobalt" />
+                <span className="text-[9px] font-bold text-slate/60 uppercase tracking-widest">Encrypted Endpoint</span>
+             </div>
           </div>
         </div>
       )}
