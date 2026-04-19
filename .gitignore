@@ -25,3 +25,4 @@ image
 *.sln
 *.sw?
 .env
+.env
