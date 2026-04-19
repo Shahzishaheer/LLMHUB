@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import ModelSelector from './ModelSelector';
 import Llmresponse from './Llmresponse';
-import { Loader2, Brain, MessageSquare, Cpu, Globe, ArrowUpRight } from 'lucide-react';
+import { Loader2, Brain, MessageSquare, Cpu, Globe, ArrowUpRight, AlertTriangle, X } from 'lucide-react';
 
 interface Model {
   id: string;
@@ -18,6 +18,7 @@ const HeroSection = () => {
   const [selectedModels, setSelectedModels] = useState<Model[]>([]);
   type ModelResponse = { modelId: string; provider?: string; answer: string; prompt: string };
   const [llmResponses, setLlmResponses] = useState<ModelResponse[]>([]);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +74,11 @@ const HeroSection = () => {
 
       try {
         const token = await getToken();
+        if (!token) {
+          setAuthError("Your secure session has expired. Please refresh the page or sign in again to continue using the Neural Stream.");
+          updateResponse('**Request Blocked:** Authentication required.');
+          return;
+        }
 
         if (model.provider === 'OpenRouter') {
           let endpoint = '';
@@ -94,6 +100,11 @@ const HeroSection = () => {
 
           clearTimeout(timeoutId);
 
+          if (response.status === 401) {
+            setAuthError("Your secure session has expired. Please refresh the page or sign in again to continue using the Neural Stream.");
+            updateResponse('**Request Blocked:** Authentication required.');
+            return;
+          }
           if (!response.ok) {
             const data = await response.json();
             const errorMsg = data.message || data.error || `Error ${response.status}`;
@@ -122,6 +133,11 @@ const HeroSection = () => {
           });
           clearTimeout(timeoutId);
 
+          if (response.status === 401) {
+            setAuthError("Your secure session has expired. Please refresh the page or sign in again to continue using the Neural Stream.");
+            updateResponse('**Request Blocked:** Authentication required.');
+            return;
+          }
           if (!response.ok) {
             const data = await response.json();
             const errorMsg = data.message || data.details || `Provider Error ${response.status}`;
@@ -152,6 +168,41 @@ const HeroSection = () => {
 
   return (
     <div className="relative min-h-screen bg-obsidian selection:bg-cobalt/30 overflow-x-hidden font-sans">
+      
+      {/* Auth Error Modal */}
+      {authError && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative max-w-md w-full bg-ink/90 border border-rose-500/30 rounded-2xl p-6 shadow-[0_0_40px_rgba(225,29,72,0.15)] glow-rose overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-rose-400" />
+            <button 
+              onClick={() => setAuthError(null)}
+              className="absolute top-4 right-4 p-1.5 text-slate/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-rose-500/10 rounded-xl">
+                <AlertTriangle className="w-6 h-6 text-rose-500" />
+              </div>
+              <div className="flex-1 pt-1">
+                <h3 className="text-lg font-bold text-white tracking-tight mb-2">Authentication Required</h3>
+                <p className="text-slate/80 text-sm leading-relaxed mb-6">
+                  {authError}
+                </p>
+                <div className="flex justify-end">
+                  <button 
+                    onClick={() => window.location.reload()}
+                    className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105 active:scale-95"
+                  >
+                    Refresh Session
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* High-End Atmospherics */}
       <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-gradient-radial from-cobalt/10 via-amethyst/5 to-transparent blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-[40%] -left-[10%] w-[600px] h-[600px] bg-cobalt/5 blur-[150px] rounded-full pointer-events-none" />

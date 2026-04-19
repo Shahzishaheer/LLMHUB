@@ -1,7 +1,7 @@
 import React from 'react'
 import type { JSX } from 'react'
 import { marked } from "marked";
-import { CheckCheck, Copy, X, Zap, Cpu, Sparkles } from 'lucide-react';
+import { CheckCheck, Copy, X, Zap, Cpu, Sparkles, Trophy, ThumbsDown } from 'lucide-react';
 
 const sanitizeResponse = (response: string): string => {
   try {
@@ -25,6 +25,8 @@ interface LlmResponseProps {
 const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
   const { model, llmResponses, onClear } = props;
   const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null);
+  const [votes, setVotes] = React.useState<Record<number, 'best' | 'poor'>>({});
+
   const answers = (llmResponses || [])
     .filter((r) => r && r.modelId === model.id)
     .map((r) => ({ text: r.answer, provider: r.provider, prompt: r.prompt }));
@@ -38,6 +40,13 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
     });
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const handleVote = (index: number, type: 'best' | 'poor') => {
+    setVotes(prev => ({
+      ...prev,
+      [index]: prev[index] === type ? null : type
+    }) as Record<number, 'best'|'poor'>);
   };
 
   return (
@@ -74,7 +83,11 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
 
       {/* Card Body */}
       <div className="p-6 bg-[#09090B]/40 flex-1 overflow-y-auto max-h-[450px] scrollbar-thin relative z-0">
-        {answers.map((ans, idx) => (
+        {answers.map((ans, idx) => {
+           const currentVote = votes[idx];
+           const isBest = currentVote === 'best';
+           
+           return (
           <div key={idx} className="mb-10 last:mb-0 space-y-6 animate-slideIn" style={{ animationDelay: `${idx * 100}ms` }}>
             {/* User Prompt */}
             <div className="flex justify-end">
@@ -85,7 +98,7 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
 
             {/* LLM Response */}
             <div className="flex justify-start relative">
-              <article className="glass-dark border-[0.5px] border-white/10 px-6 py-5 rounded-2xl rounded-tl-sm w-[95%] relative shadow-xl">
+              <article className={`glass-dark border-[0.5px] px-6 py-5 rounded-2xl rounded-tl-sm w-[95%] relative shadow-xl transition-all duration-300 ${isBest ? 'border-amber-400/50 shadow-[0_0_30px_rgba(251,191,36,0.15)] bg-amber-500/5' : 'border-white/10'}`}>
                 <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   {copiedIndex === idx ? (
                     <div className="bg-emerald-500/10 text-emerald-400 p-1.5 rounded-md border border-emerald-500/20">
@@ -112,15 +125,46 @@ const Llmresponse: React.FC<LlmResponseProps> = (props): JSX.Element | null => {
                     <span className="text-[11px] font-semibold tracking-widest text-slate uppercase bg-gradient-to-r from-silver to-slate bg-clip-text text-transparent">Synthesizing...</span>
                   </div>
                 ) : (
-                  <div 
-                    className="prose prose-invert max-w-none text-silver/80 leading-relaxed font-normal text-[14px]"
-                    dangerouslySetInnerHTML={{ __html: sanitizeResponse(ans.text) }} 
-                  />
+                  <>
+                    <div 
+                      className="prose prose-invert max-w-none text-silver/80 leading-relaxed font-normal text-[14px]"
+                      dangerouslySetInnerHTML={{ __html: sanitizeResponse(ans.text) }} 
+                    />
+                    
+                    {/* Comparison Bar */}
+                    <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between animate-in fade-in duration-500">
+                      <span className="text-[11px] font-semibold text-slate/50 uppercase tracking-widest">Rate Response</span>
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => handleVote(idx, 'best')}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                            isBest 
+                              ? 'bg-amber-400/20 text-amber-400 border border-amber-400/30' 
+                              : 'bg-white/5 text-slate hover:bg-white/10 hover:text-white border border-transparent'
+                          }`}
+                        >
+                          <Trophy className="w-3.5 h-3.5" />
+                          Mark Best
+                        </button>
+                        <button 
+                          onClick={() => handleVote(idx, 'poor')}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-300 ${
+                            currentVote === 'poor' 
+                              ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' 
+                              : 'bg-white/5 text-slate hover:bg-white/10 hover:text-white border border-transparent'
+                          }`}
+                        >
+                          <ThumbsDown className="w-3.5 h-3.5" />
+                          Poor
+                        </button>
+                      </div>
+                    </div>
+                  </>
                 )}
               </article>
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </div>
   );
