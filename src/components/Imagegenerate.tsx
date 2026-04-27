@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2, Image as ImageIcon, Download, RefreshCw, Sparkles, Wand2, Palette, Trash2 } from 'lucide-react';
 import { BounceLoader } from 'react-spinners';
+import { useAuth } from '@clerk/clerk-react';
 
 interface GeneratedImageItem {
   url: string;
@@ -9,6 +10,7 @@ interface GeneratedImageItem {
 }
 
 const Imagegenerate = () => {
+  const { getToken } = useAuth();
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -28,10 +30,16 @@ const Imagegenerate = () => {
     setLastPrompt(currentPrompt);
 
     try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Authentication required. Please sign in again.');
+      }
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}image/image-generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ prompt: currentPrompt }),
       });
@@ -67,10 +75,16 @@ const Imagegenerate = () => {
     setGeneratedImage(null);
 
     try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Authentication required. Please sign in again.');
+      }
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}image/image-generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ prompt: lastPrompt }),
       });
